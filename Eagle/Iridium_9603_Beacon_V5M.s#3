@@ -11799,6 +11799,9 @@ BF959 corrected 2008.03.06&lt;br&gt;</description>
 <part name="U$47" library="microbuilder" deviceset="GND" device=""/>
 <part name="RST" library="adafruit" deviceset="PINHD-1X1" device=""/>
 <part name="BAT-" library="adafruit" deviceset="PINHD-1X1" device=""/>
+<part name="BAT4" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
+<part name="BAT5" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
+<part name="BAT6" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 </parts>
 <sheets>
 <sheet>
@@ -11933,6 +11936,18 @@ power switch</text>
 <instance part="U$43" gate="G$1" x="218.44" y="53.34" smashed="yes">
 <attribute name="VALUE" x="216.916" y="50.8" size="1.27" layer="96"/>
 </instance>
+<instance part="BAT4" gate="G$1" x="236.22" y="106.68" smashed="yes" rot="R270">
+<attribute name="NAME" x="241.3" y="110.49" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="229.87" y="110.49" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="BAT5" gate="G$1" x="236.22" y="93.98" smashed="yes" rot="R270">
+<attribute name="NAME" x="241.3" y="97.79" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="229.87" y="97.79" size="1.778" layer="96" rot="R270"/>
+</instance>
+<instance part="BAT6" gate="G$1" x="236.22" y="81.28" smashed="yes" rot="R270">
+<attribute name="NAME" x="241.3" y="85.09" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="229.87" y="85.09" size="1.778" layer="96" rot="R270"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -12020,6 +12035,9 @@ power switch</text>
 <pinref part="U$37" gate="G$1" pin="VBAT"/>
 <wire x1="218.44" y1="111.76" x2="218.44" y2="114.3" width="0.1524" layer="91"/>
 <pinref part="BAT1" gate="G$1" pin="+"/>
+<pinref part="BAT4" gate="G$1" pin="+"/>
+<wire x1="218.44" y1="111.76" x2="236.22" y2="111.76" width="0.1524" layer="91"/>
+<junction x="218.44" y="111.76"/>
 </segment>
 </net>
 <net name="N$8" class="0">
@@ -12078,6 +12096,23 @@ power switch</text>
 <pinref part="BAT-" gate="G$1" pin="1"/>
 <wire x1="218.44" y1="76.2" x2="218.44" y2="71.882" width="0.1524" layer="91"/>
 <wire x1="218.44" y1="71.882" x2="210.312" y2="71.882" width="0.1524" layer="91"/>
+<pinref part="BAT6" gate="G$1" pin="-"/>
+<wire x1="236.22" y1="76.2" x2="218.44" y2="76.2" width="0.1524" layer="91"/>
+<junction x="218.44" y="76.2"/>
+</segment>
+</net>
+<net name="N$22" class="0">
+<segment>
+<pinref part="BAT4" gate="G$1" pin="-"/>
+<pinref part="BAT5" gate="G$1" pin="+"/>
+<wire x1="236.22" y1="101.6" x2="236.22" y2="99.06" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$29" class="0">
+<segment>
+<pinref part="BAT5" gate="G$1" pin="-"/>
+<pinref part="BAT6" gate="G$1" pin="+"/>
+<wire x1="236.22" y1="88.9" x2="236.22" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

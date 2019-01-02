@@ -1,0 +1,113 @@
+Partlist
+
+Exported from Iridium_9603_Beacon_V5M.brd at 2018-12-27 5:33 PM
+
+EAGLE Version 9.2.2 Copyright (c) 1988-2018 Autodesk, Inc.
+
+Assembly variant: 
+
+Part     Value                                 Package                                      Library                    Position (mm)         Orientation
+
+3V3                                            1X01                                         adafruit                   (57.15 102.13975)     R270
+3V3SW                                          1X01                                         adafruit                   (11.43 102.108)       R90
+BAT-                                           1X01                                         adafruit                   (59.69 82.20075)      R0
+BAT1                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 109.56925)   MR180
+BAT2                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 92.17025)    MR0
+BAT3                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 74.77125)    MR180
+BAT4                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 57.37225)    MR180
+BAT5                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 39.97325)    MR0
+BAT6                                           BATTERY-AAA-KEYSTONE92                       SparkFun-Electromechanical (33.8455 22.57425)    MR180
+C1       1uF                                   0603-NO                                      microbuilder               (35.56 89.94775)      R180
+C2       22pF                                  0603-NO                                      microbuilder               (46.0375 92.48775)    R0
+C3       10uF                                  0805-NO                                      microbuilder               (21.336 101.25075)    R270
+C4       22pF                                  0603-NO                                      microbuilder               (46.0375 94.96425)    R0
+C5       10uF                                  0805-NO                                      microbuilder               (41.275 103.91775)    R180
+C6       10µF                                  0805-NO                                      microbuilder               (23.241 93.345)       R0
+C7       1uF                                   0603-NO                                      microbuilder               (28.8925 90.20175)    R270
+C8       10µF                                  0805-NO                                      microbuilder               (26.67 90.20175)      R270
+C9       0.1uF                                 0805-NO                                      microbuilder               (20.32 104.17175)     R0
+C10      10uF                                  0805-NO                                      microbuilder               (24.13 110.52175)     R0
+C11      1F 2.7V                               CPOL-RADIAL-1F-2.7V                          SparkFun-Capacitors        (36.83 116.87175)     R180
+C12      1F 2.7V                               CPOL-RADIAL-1F-2.7V                          SparkFun-Capacitors        (46.99 116.87175)     R180
+C13      0.1uF                                 0805-NO                                      microbuilder               (21.93925 98.07575)   R0
+C14      1uF                                   0603-NO                                      microbuilder               (43.942 97.63125)     R0
+C15      1uF                                   0603-NO                                      microbuilder               (42.672 106.14025)    R0
+C16      0.22uF                                0603-NO                                      microbuilder               (41.8465 112.74425)   R0
+C17      2.2uF                                 0805-NO                                      microbuilder               (41.87825 120.49125)  R0
+C18      10nF                                  0805-NO                                      microbuilder               (8.03275 125.984)     R180
+C19      10uF                                  0805-NO                                      microbuilder               (28.22575 78.70825)   R180
+COM1                                           1X01                                         adafruit                   (30.48 130.302)       R0
+COM2                                           1X01                                         adafruit                   (38.1 130.302)        R0
+CON1                                           FCI_10103594                                 microbuilder               (37.9095 66.04)       R0
+CON4     uFL                                   U.FL                                         microbuilder               (49.9745 125.25375)   R90
+CS                                             1X01                                         adafruit                   (59.69 99.59975)      R90
+D1       MBR120                                SOD-123                                      microbuilder               (26.06675 116.61775)  R180
+D2       MBR120                                SOD-123                                      microbuilder               (26.25725 125.7935)   R90
+D3       MBR120                                SOD-123                                      microbuilder               (43.307 125.82525)    R90
+D4       MBR120                                SOD-123                                      microbuilder               (36.576 75.2475)      R270
+D5       MBR120                                SOD-123                                      microbuilder               (57.75325 122.90425)  R90
+D6       MBR120                                SOD-123                                      microbuilder               (60.35675 122.90425)  R90
+FD1      FIDUCIAL1X2                           FIDUCIAL-1X2                                 SparkFun-Aesthetics        (10.16 71.12)         R0
+FD2      FIDUCIAL1X2                           FIDUCIAL-1X2                                 SparkFun-Aesthetics        (55.0164 127)         R0
+GND                                            1X01                                         adafruit                   (59.69 84.74075)      R270
+GND2                                           1X01                                         adafruit                   (59.69 102.13975)     R270
+GND3                                           1X01                                         adafruit                   (8.89 102.108)        R90
+GNSS     SMA-142-0711-821/826                  J502-ND-142-0711-821/826                     con-coax                   (17.78 132.08)        R270
+IRIDIUM  SMA-142-0711-821/826                  J502-ND-142-0711-821/826                     con-coax                   (49.9364 132.08)      R270
+J1       SS4-10-3.50-X-D                       SS4-10-3.50-X-D                              SS4-10-3.50-X-D            (31.35121875 108.14176875) R0
+JP1                                            PAD-JUMPER-3-2OF3_NC_BY_TRACE_YES_SILK_LARGE SparkFun-Passives          (55.9435 118.64975)   R180
+JP2                                            PAD-JUMPER-3-2OF3_NC_BY_TRACE_YES_SILK_LARGE SparkFun-Passives          (55.9435 115.28425)   R180
+L1       33nH                                  0805-NO                                      microbuilder               (16.85925 126.01575)  R0
+LED1                                           WS2812B                                      SparkFun-LED               (30.13075 74.8665)    R0
+LED2     RED                                   CHIPLED_0805_NOOUTLINE                       microbuilder               (34.671 75.057)       R180
+MISO                                           1X01                                         adafruit                   (54.61 102.13975)     R270
+MOSI                                           1X01                                         adafruit                   (57.15 99.59975)      R90
+NC1                                            1X01                                         adafruit                   (27.94 130.302)       R0
+NC2                                            1X01                                         adafruit                   (35.56 130.302)       R0
+NO1                                            1X01                                         adafruit                   (33.02 130.302)       R0
+NO2                                            1X01                                         adafruit                   (40.64 130.302)       R0
+Q1       DMG3415U-7                            SOT23-WIDE                                   microbuilder               (20.6375 107.09275)   R90
+Q2       DMG3415U-7                            SOT23-WIDE                                   microbuilder               (23.5585 122.90425)   R0
+Q3       DMG3415U-7                            SOT23-WIDE                                   microbuilder               (30.353 119.253)      R270
+Q4       DMG3415U-7                            SOT23-WIDE                                   microbuilder               (37.973 107.72775)    R0
+Q5       2N2222                                SOT23-BEC                                    transistor                 (38.13175 85.18525)   R180
+R1       100K                                  0805-NO                                      microbuilder               (24.4475 106.96575)   R270
+R2       12K                                   0805-NO                                      microbuilder               (53.4035 112.903)     R0
+R3       100K                                  0805-NO                                      microbuilder               (42.037 89.63025)     R180
+R4       100K                                  0805-NO                                      microbuilder               (47.21225 104.8385)   R0
+R5       1K                                    0603-NO                                      microbuilder               (22.0345 95.885)      R0
+R6       100K                                  0805-NO                                      microbuilder               (46.0375 89.63025)    R180
+R7       47k                                   0603-NO                                      microbuilder               (40.4495 79.756)      R0
+R8       1K                                    0603-NO                                      microbuilder               (17.8435 95.885)      R180
+R9       10 ohm                                0805-NO                                      microbuilder               (13.081 126.01575)    R180
+R10      2.2K                                  0603-NO                                      microbuilder               (34.63925 78.39075)   R270
+R11      30K                                   0805-NO                                      microbuilder               (58.4835 112.903)     R180
+R12      100K                                  0805-NO                                      microbuilder               (23.5585 120.04675)   R0
+R13      100K                                  0805-NO                                      microbuilder               (26.95575 119.253)    R270
+R14      1K                                    0603-NO                                      microbuilder               (39.497 89.2175)      R270
+R15      10K                                   0603-NO                                      microbuilder               (37.9095 105.2195)    R180
+R16      10K                                   0603-NO                                      microbuilder               (47.33925 106.83875)  R0
+R17      10K                                   0603-NO                                      microbuilder               (37.9095 89.2175)     R270
+RELAY1   G6SK-2_DC5                            G6SK2DC5                                     G6SK-2_DC5                 (34.82975 125.095)    R0
+RST                                            1X01                                         adafruit                   (57.15 82.20075)      R90
+S1       STANDOFF_ELECTRICALMCMASTER-95117A411 STANDOFF-ELECTRICAL-MCMASTER-95117A411       SparkFun-Electromechanical (21.351240625 82.541109375) R0
+S2       STANDOFF_ELECTRICALMCMASTER-95117A411 STANDOFF-ELECTRICAL-MCMASTER-95117A411       SparkFun-Electromechanical (46.34991875 82.541109375) R0
+SCK                                            1X01                                         adafruit                   (54.61 99.59975)      R90
+SCL                                            1X01                                         adafruit                   (8.89 99.568)         R270
+SDA                                            1X01                                         adafruit                   (11.43 99.568)        R270
+SOLAR1+                                        1X01                                         adafruit                   (60.325 127)          R0
+SOLAR1-                                        1X01                                         adafruit                   (60.325 129.54)       R0
+SOLAR2+                                        1X01                                         adafruit                   (57.785 127)          R0
+SOLAR2-                                        1X01                                         adafruit                   (57.785 129.54)       R0
+SW1                                            TACTILE_SWITCH_SMD_4.6X2.8MM                 SparkFun-Electromechanical (29.21 69.215)        R180
+SWCLK                                          1X01                                         adafruit                   (54.61 84.74075)      R90
+SWDIO                                          1X01                                         adafruit                   (57.15 84.74075)      R90
+U1       MCP111T-240E/TT                       SOT95P237X112-3N                             Microchip-MCP11            (34.76625 86.26475)   R0
+U2       SPX3819-3.3                           SOT23-5                                      microbuilder               (22.86 90.20175)      R270
+U3       LTC3225EDDB#TRMPBF                    DFN300X200-10L                               LTC_By_element14_Batch_1   (44.1325 109.06125)   R90
+U4       MPL3115A2LGA8                         LGA8                                         SparkFun-Sensors           (17.11325 99.72675)   R180
+U5       ATSAMD21G18_QFN                       TQFN48_7MM                                   microbuilder               (35.56 96.29775)      R90
+U6       MAX-M8                                MAX-M8                                       ubloxLib                   (14.5415 118.872)     R270
+U7       LT1634-1,25BMCMS8                     MSOP8                                        linear-technology          (40.54475 75.78725)   R0
+VBUS                                           1X01                                         adafruit                   (54.61 82.20075)      R90
+X1       32.768                                XTAL3215                                     adafruit2                  (42.7355 93.75775)    R270
