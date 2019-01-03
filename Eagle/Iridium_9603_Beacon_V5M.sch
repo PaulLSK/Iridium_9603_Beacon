@@ -67,6 +67,8 @@
 <layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
 <layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
 <layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="88" name="SimResults" color="9" fill="1" visible="yes" active="yes"/>
+<layer number="89" name="SimProbes" color="9" fill="1" visible="yes" active="yes"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
@@ -11977,6 +11979,54 @@ BF959 corrected 2008.03.06&lt;br&gt;</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="argol-eagle-library">
+<packages>
+<package name="AV2_SPDT">
+<pad name="P$1" x="0" y="0" drill="1.8542"/>
+<pad name="P$2" x="0" y="3.81" drill="1.8542"/>
+<pad name="P$3" x="0" y="7.62" drill="1.8542"/>
+<hole x="-2.54" y="-12.7" drill="1.8542"/>
+<hole x="2.54" y="-12.7" drill="1.8542"/>
+<wire x1="-3.81" y1="-13.97" x2="-3.81" y2="10.16" width="0.127" layer="21"/>
+<wire x1="-3.81" y1="10.16" x2="3.81" y2="10.16" width="0.127" layer="21"/>
+<wire x1="3.81" y1="10.16" x2="3.81" y2="-13.97" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-13.97" x2="-3.81" y2="-13.97" width="0.127" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="SPDT">
+<pin name="P$1" x="12.7" y="5.08" length="middle" rot="R180"/>
+<pin name="P$2" x="-5.08" y="0" length="middle"/>
+<pin name="P$3" x="12.7" y="-5.08" length="middle" rot="R180"/>
+<wire x1="0" y1="0" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="7101K2AV2QE">
+<description>Digikey Par#: CKN1441-ND
+
+SPDT Switch 
+5A DC, 28 VDC
+-30C to +85C
+Locking Lever</description>
+<gates>
+<gate name="G$1" symbol="SPDT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="AV2_SPDT">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+<connect gate="G$1" pin="P$3" pad="P$3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -12146,16 +12196,6 @@ BF959 corrected 2008.03.06&lt;br&gt;</description>
 <part name="NC2" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
 <part name="D3" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
 <part name="D2" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
-<part name="SOLAR1-" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
-<part name="SOLAR2-" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
-<part name="SOLAR1+" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
-<part name="SOLAR2+" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
-<part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="U$34" library="microbuilder" deviceset="VBUS" device=""/>
-<part name="D5" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
-<part name="D6" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
-<part name="U$2" library="microbuilder" deviceset="VBUS" device=""/>
 <part name="Q4" library="microbuilder" deviceset="MOSFET-P" device="WIDE" value="DMG3415U-7 "/>
 <part name="Q5" library="transistor" library_urn="urn:adsk.eagle:library:402" deviceset="*-NPN-" device="SOT23-BEC" package3d_urn="urn:adsk.eagle:package:28748/2" technology="MMBT2222ALT1" value="2N2222"/>
 <part name="U$15" library="microbuilder" deviceset="GND" device=""/>
@@ -12170,6 +12210,8 @@ BF959 corrected 2008.03.06&lt;br&gt;</description>
 <part name="BAT4" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 <part name="BAT5" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 <part name="BAT6" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
+<part name="U$53" library="argol-eagle-library" deviceset="7101K2AV2QE" device=""/>
+<part name="FD3" library="SparkFun-Aesthetics" deviceset="FIDUCIAL" device="1X2"/>
 </parts>
 <sheets>
 <sheet>
@@ -12235,11 +12277,6 @@ and Element14's LTC Library</text>
 <text x="132.08" y="154.94" size="2.54" layer="91" align="bottom-center">See Page 7 for Change Log</text>
 <text x="228.092" y="65.024" size="1.778" layer="91" align="bottom-center">Pads for battery
 power switch</text>
-<text x="189.484" y="64.516" size="1.778" layer="91" align="bottom-center">Cut link if installing
-power switch</text>
-<wire x1="207.772" y1="71.882" x2="205.232" y2="71.882" width="0.1524" layer="150"/>
-<wire x1="205.232" y1="71.882" x2="205.232" y2="61.722" width="0.1524" layer="150"/>
-<wire x1="205.232" y1="61.722" x2="207.772" y2="61.722" width="0.1524" layer="150"/>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0" smashed="yes">
@@ -12316,6 +12353,8 @@ power switch</text>
 <attribute name="NAME" x="241.3" y="85.09" size="1.778" layer="95" rot="R270"/>
 <attribute name="VALUE" x="229.87" y="85.09" size="1.778" layer="96" rot="R270"/>
 </instance>
+<instance part="U$53" gate="G$1" x="193.04" y="71.12" smashed="yes" rot="R180"/>
+<instance part="FD3" gate="G$1" x="231.14" y="35.56" smashed="yes"/>
 </instances>
 <busses>
 </busses>
@@ -12365,9 +12404,13 @@ power switch</text>
 </segment>
 <segment>
 <pinref part="U$43" gate="G$1" pin="GND"/>
+<wire x1="218.44" y1="61.722" x2="218.44" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="GND" gate="G$1" pin="1"/>
 <wire x1="210.312" y1="61.722" x2="218.44" y2="61.722" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="61.722" x2="218.44" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="U$53" gate="G$1" pin="P$1"/>
+<wire x1="180.34" y1="66.04" x2="180.34" y2="61.722" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="61.722" x2="210.312" y2="61.722" width="0.1524" layer="91"/>
+<junction x="210.312" y="61.722"/>
 </segment>
 </net>
 <net name="D6" class="0">
@@ -12467,6 +12510,10 @@ power switch</text>
 <pinref part="BAT6" gate="G$1" pin="-"/>
 <wire x1="236.22" y1="76.2" x2="218.44" y2="76.2" width="0.1524" layer="91"/>
 <junction x="218.44" y="76.2"/>
+<junction x="210.312" y="71.882"/>
+<pinref part="U$53" gate="G$1" pin="P$2"/>
+<wire x1="210.312" y1="71.882" x2="210.312" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="210.312" y1="71.12" x2="198.12" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$22" class="0">
@@ -12759,42 +12806,6 @@ power switch</text>
 <attribute name="NAME" x="27.94" y="142.24" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
 <attribute name="VALUE" x="30.48" y="142.24" size="1.016" layer="96" font="vector" ratio="15" rot="R90" align="center"/>
 </instance>
-<instance part="SOLAR1-" gate="G$1" x="180.34" y="127" smashed="yes">
-<attribute name="NAME" x="173.99" y="130.175" size="1.778" layer="95"/>
-<attribute name="VALUE" x="173.99" y="121.92" size="1.778" layer="96"/>
-</instance>
-<instance part="SOLAR2-" gate="G$1" x="203.2" y="127" smashed="yes">
-<attribute name="NAME" x="196.85" y="130.175" size="1.778" layer="95"/>
-<attribute name="VALUE" x="196.85" y="121.92" size="1.778" layer="96"/>
-</instance>
-<instance part="SOLAR1+" gate="G$1" x="180.34" y="139.7" smashed="yes">
-<attribute name="NAME" x="173.99" y="142.875" size="1.778" layer="95"/>
-<attribute name="VALUE" x="173.99" y="134.62" size="1.778" layer="96"/>
-</instance>
-<instance part="SOLAR2+" gate="G$1" x="203.2" y="139.7" smashed="yes">
-<attribute name="NAME" x="196.85" y="142.875" size="1.778" layer="95"/>
-<attribute name="VALUE" x="196.85" y="134.62" size="1.778" layer="96"/>
-</instance>
-<instance part="GND5" gate="1" x="170.18" y="124.46" smashed="yes">
-<attribute name="VALUE" x="167.64" y="121.92" size="1.778" layer="96"/>
-</instance>
-<instance part="GND6" gate="1" x="193.04" y="124.46" smashed="yes">
-<attribute name="VALUE" x="190.5" y="121.92" size="1.778" layer="96"/>
-</instance>
-<instance part="U$34" gate="G$1" x="193.04" y="154.94" smashed="yes">
-<attribute name="VALUE" x="191.516" y="155.956" size="1.27" layer="96"/>
-</instance>
-<instance part="D5" gate="G$1" x="193.04" y="147.32" smashed="yes" rot="R90">
-<attribute name="NAME" x="190.5" y="147.32" size="1.27" layer="95" rot="R90" align="center"/>
-<attribute name="VALUE" x="195.54" y="147.32" size="1.27" layer="96" rot="R90" align="center"/>
-</instance>
-<instance part="D6" gate="G$1" x="170.18" y="147.32" smashed="yes" rot="R90">
-<attribute name="NAME" x="167.64" y="147.32" size="1.27" layer="95" rot="R90" align="center"/>
-<attribute name="VALUE" x="172.68" y="147.32" size="1.27" layer="96" rot="R90" align="center"/>
-</instance>
-<instance part="U$2" gate="G$1" x="170.18" y="154.94" smashed="yes">
-<attribute name="VALUE" x="168.656" y="155.956" size="1.27" layer="96"/>
-</instance>
 <instance part="RST" gate="G$1" x="208.28" y="91.44" smashed="yes">
 <attribute name="NAME" x="201.93" y="94.615" size="1.778" layer="95"/>
 <attribute name="VALUE" x="201.93" y="86.36" size="1.778" layer="96"/>
@@ -12908,16 +12919,6 @@ power switch</text>
 <pinref part="LED2" gate="G$1" pin="C"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="223.52" y1="53.34" x2="223.52" y2="48.26" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="SOLAR1-" gate="G$1" pin="1"/>
-<pinref part="GND5" gate="1" pin="GND"/>
-<wire x1="177.8" y1="127" x2="170.18" y2="127" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="SOLAR2-" gate="G$1" pin="1"/>
-<pinref part="GND6" gate="1" pin="GND"/>
-<wire x1="200.66" y1="127" x2="193.04" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MOSI" class="0">
@@ -13107,16 +13108,6 @@ power switch</text>
 <pinref part="D4" gate="G$1" pin="C"/>
 <pinref part="U$45" gate="G$1" pin="VBUS"/>
 <wire x1="243.84" y1="152.4" x2="243.84" y2="157.48" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="D5" gate="G$1" pin="C"/>
-<pinref part="U$34" gate="G$1" pin="VBUS"/>
-<wire x1="193.04" y1="149.86" x2="193.04" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="D6" gate="G$1" pin="C"/>
-<pinref part="U$2" gate="G$1" pin="VBUS"/>
-<wire x1="170.18" y1="149.86" x2="170.18" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VBAT" class="0">
@@ -13399,22 +13390,6 @@ power switch</text>
 <pinref part="D4" gate="G$1" pin="A"/>
 <wire x1="241.3" y1="144.78" x2="243.84" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="243.84" y1="144.78" x2="243.84" y2="147.32" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$14" class="0">
-<segment>
-<pinref part="SOLAR2+" gate="G$1" pin="1"/>
-<pinref part="D5" gate="G$1" pin="A"/>
-<wire x1="200.66" y1="139.7" x2="193.04" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="193.04" y1="139.7" x2="193.04" y2="144.78" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$4" class="0">
-<segment>
-<pinref part="SOLAR1+" gate="G$1" pin="1"/>
-<wire x1="177.8" y1="139.7" x2="170.18" y2="139.7" width="0.1524" layer="91"/>
-<pinref part="D6" gate="G$1" pin="A"/>
-<wire x1="170.18" y1="139.7" x2="170.18" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -14385,7 +14360,9 @@ Added a pad for a battery power switch</text>
 <text x="157.48" y="149.86" size="2.54" layer="91" align="top-left">V5M:
 
 Double AA battery capacity
-Added mounting holes (M3)</text>
+Added mounting holes (M3)
+Added SPDT Switch for power
+Removed Solar Power connections</text>
 </plain>
 <instances>
 <instance part="FRAME5" gate="G$1" x="0" y="0" smashed="yes">
@@ -14480,44 +14457,7 @@ the relay when both the GNSS and supercapacitor charger have been disabled.
 <approved hash="106,2,101.6,81.28,A4,,,,,"/>
 <approved hash="106,2,101.6,68.58,D3,,,,,"/>
 <approved hash="106,2,101.6,78.74,D8,,,,,"/>
-<approved hash="113,2,198.964,19.7358,FRAME1,,,,,"/>
-<approved hash="113,1,130.071,89.431,FRAME3,,,,,"/>
-<approved hash="113,2,157.763,82.6812,3V3SW,,,,,"/>
-<approved hash="113,2,157.717,72.5212,GND3,,,,,"/>
-<approved hash="113,2,157.717,62.3612,SCL,,,,,"/>
-<approved hash="113,2,157.717,52.2012,SDA,,,,,"/>
-<approved hash="113,2,180.623,62.3612,SWCLK,,,,,"/>
-<approved hash="113,2,180.577,52.2012,SWDIO,,,,,"/>
-<approved hash="113,5,130.071,89.431,FRAME4,,,,,"/>
-<approved hash="113,2,180.577,72.5212,GND2,,,,,"/>
-<approved hash="113,2,180.577,82.6812,3V3,,,,,"/>
-<approved hash="113,2,205.977,82.6812,SCK,,,,,"/>
-<approved hash="113,2,205.977,72.5212,MISO,,,,,"/>
-<approved hash="113,2,205.977,62.3612,MOSI,,,,,"/>
-<approved hash="113,2,205.977,52.2012,CS,,,,,"/>
-<approved hash="113,2,132.08,162.171,SW1,,,,,"/>
-<approved hash="113,2,233.045,140.991,CON1,,,,,"/>
-<approved hash="113,7,130.071,89.431,FRAME5,,,,,"/>
-<approved hash="113,1,220.159,106.68,BAT1,,,,,"/>
-<approved hash="113,1,220.159,93.98,BAT2,,,,,"/>
-<approved hash="113,1,220.159,81.28,BAT3,,,,,"/>
-<approved hash="113,2,237.49,89.1328,LED1,,,,,"/>
-<approved hash="113,8,130.071,89.431,FRAME6,,,,,"/>
-<approved hash="113,1,210.075,63.1232,GND,,,,,"/>
-<approved hash="113,2,180.577,92.8412,VBUS,,,,,"/>
 <approved hash="113,6,131.976,90.066,FRAME7,,,,,"/>
-<approved hash="113,6,106.917,108.081,NC1,,,,,"/>
-<approved hash="113,6,106.917,100.461,COM1,,,,,"/>
-<approved hash="113,6,106.917,92.8412,NO1,,,,,"/>
-<approved hash="113,6,205.977,108.081,NO2,,,,,"/>
-<approved hash="113,6,205.977,100.461,COM2,,,,,"/>
-<approved hash="113,6,205.977,92.8412,NC2,,,,,"/>
-<approved hash="113,2,179.72,128.401,SOLAR1-,,,,,"/>
-<approved hash="113,2,202.58,128.401,SOLAR2-,,,,,"/>
-<approved hash="113,2,179.72,141.101,SOLAR1+,,,,,"/>
-<approved hash="113,2,202.58,141.101,SOLAR2+,,,,,"/>
-<approved hash="113,2,205.977,92.8412,RST,,,,,"/>
-<approved hash="113,1,210.075,73.2832,BAT-,,,,,"/>
 </errors>
 </schematic>
 </drawing>

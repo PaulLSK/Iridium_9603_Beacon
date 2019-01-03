@@ -1,3 +1,7 @@
+#Eagle backup files
+*.b\#*
+*.s\#*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
