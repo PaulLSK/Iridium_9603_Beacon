@@ -1,16 +1,16 @@
 // ###########################
-// # Iridium 9603N Beacon V5 #
+// # Iridium 9603N Beacon V5M #
 // ###########################
 
-// This version provides support for the Iridium Beacon Radio Board based on the LPRS eRIC4/9
-// eRIC Pin4 Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
-// eRIC Pin3 Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
-// eRIC Pin2 CTS / BUSY (output) is connected to MISO (Digital Pin 22)
-// eRIC Pin22 (wake from low power) is connected to CS (Digital Pin 4)
-// The radio board is optional - the code will work the same with or without it
-// The message to be transmitted by the radio board should be sent in an Iridium Mobile Terminated message
-// (e.g. from RockBLOCK Operations or a Beacon Base) containing [RADIO=nnnnnnnn] where "nnnnnnnn" is
-// the radio message (usually the serial number of the eRIC on a Pyro Cut-Down)
+// Define a variables to help testing and debugging
+#define SKIP_GPS      1
+#define SKIP_CHARGER  1
+#define SKIP_9603     1
+
+
+// This version provides support for the iMET Radiosonde
+// Radiosonde Pin# Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
+// Radiosonde Pin# Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
 
 // Stores both source and destination RockBLOCK serial numbers in flash.
 // The default values are:
@@ -174,26 +174,47 @@ int RBDESTINATION = RB_destination;
 #include <Adafruit_MPL3115A2.h>
 Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 
+// Serial Port Definisions
+// SERCOM0 -> Serial1 -> GPS
+// SERCOM1 -> Serial2 -> Iridium
+// SERCOM2
+// SERCOM3 -> I2C -> Pressure
+// SERCOM4 -> Serial3 -> iMET
+// SERCOM5 -> Serial -> USBSerial
+
+
 // Serial2 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
-#define PIN_SERIAL2_RX       (34ul)               // Pin description number for PIO_SERCOM on D12
-#define PIN_SERIAL2_TX       (36ul)               // Pin description number for PIO_SERCOM on D10
-#define PAD_SERIAL2_TX       (UART_TX_PAD_2)      // SERCOM pad 2 (SC1PAD2)
-#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_3)    // SERCOM pad 3 (SC1PAD3)
+#define PIN_SERIAL2_RX       (34ul)               // Pin description number for PIO_SERCOM on D12 (Physical Pin 28)
+#define PIN_SERIAL2_TX       (36ul)               // Pin description number for PIO_SERCOM on D10 (Physical Pin 27)
+#define PAD_SERIAL2_TX       (UART_TX_PAD_2)      // SERCOM1 pad 2 (SC1PAD2)
+#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_3)    // SERCOM1 pad 3 (SC1PAD3)
 // Instantiate the Serial2 class
 Uart Serial2(&sercom1, PIN_SERIAL2_RX, PIN_SERIAL2_TX, PAD_SERIAL2_RX, PAD_SERIAL2_TX);
 HardwareSerial &ssIridium(Serial2);
 
 // Serial3 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
-// eRIC Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
-// eRIC Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
+// iMET Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
+// iMET Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
 #define PIN_SERIAL3_RX       (24ul)               // Pin description number for PIO_SERCOM on D24
 #define PIN_SERIAL3_TX       (23ul)               // Pin description number for PIO_SERCOM on D23
 #define PAD_SERIAL3_TX       (UART_TX_PAD_2)      // SERCOM4 Pad 2 (SC4PAD2)
 #define PAD_SERIAL3_RX       (SERCOM_RX_PAD_3)    // SERCOM4 Pad 3 (SC4PAD3)
 // Instantiate the Serial3 class
 Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIAL3_TX);
-HardwareSerial &sseRIC(Serial3);
+HardwareSerial &ssiMET(Serial3);
 
+/*
+// Serial4 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
+// instrument Tx (input) is connected to SWCLK (Digital Pin 23, Port B Pin 10, SERCOM1 Pad 2, Serial43 Tx)
+// instrument Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM1 Pad 3, Serial4 Rx)
+#define PIN_SERIAL3_RX       (24ul)               // Pin description number for PIO_SERCOM on D24
+#define PIN_SERIAL3_TX       (23ul)               // Pin description number for PIO_SERCOM on D23
+#define PAD_SERIAL3_TX       (UART_TX_PAD_2)      // SERCOM4 Pad 2 (SC4PAD2)
+#define PAD_SERIAL3_RX       (SERCOM_RX_PAD_3)    // SERCOM4 Pad 3 (SC4PAD3)
+// Instantiate the Serial3 class
+Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIAL3_TX);
+HardwareSerial &ssiMET(Serial3);
+*/
 #define ssGPS Serial1 // Use M0 Serial1 to interface to the MAX-M8Q
 
 // Leave the "#define GALILEO" uncommented to use: GPS + Galileo + GLONASS + SBAS
@@ -285,21 +306,19 @@ static const int GPS_EN = 11; // GPS & MPL3115A2 Enable on pin D11
 static const int set_coil = 7; // OMRON G6SK relay set coil (pull low to energise coil)
 static const int reset_coil = 2; // OMRON G6SK relay reset coil (pull low to energise coil)
 
-// eRIC CTS / BUSY (output) is connected to MISO (Digital Pin 22)
-// eRIC Pin22 (wake from low power) is connected to CS (Digital Pin 4)
-static const int eRIC_BUSY = 22;
-static const int eRIC_WAKE = 4;
-
 // Loop Steps
 #define init          0
 #define start_GPS     1
 #define read_GPS      2
 #define read_pressure 3
-#define start_LTC3225 4
-#define wait_LTC3225  5
-#define start_9603    6
-#define zzz           7
-#define wake          8
+#define read_iMET     4
+#define read_inst2    5
+#define start_LTC3225 6
+#define wait_LTC3225  7
+#define start_9603    8
+#define zzz           9
+#define wake          10
+
 
 // Variables used by Loop
 int year;
@@ -542,9 +561,11 @@ void setup()
   pinMode(set_coil, INPUT_PULLUP); // Initialise relay set_coil pin
   pinMode(reset_coil, INPUT_PULLUP); // Initialise relay reset_coil pin
 
-  pinMode(eRIC_BUSY, INPUT_PULLUP); // Initialise eRIC CTS / BUSY pin
-  pinMode(eRIC_WAKE, OUTPUT); // Initialise eRIC WAKE pin (PIN22)
-  digitalWrite(eRIC_WAKE, HIGH); // Enable eRIC
+
+// delete this
+ // pinMode(eRIC_BUSY, INPUT_PULLUP); // Initialise eRIC CTS / BUSY pin
+ // pinMode(eRIC_WAKE, OUTPUT); // Initialise eRIC WAKE pin (PIN22)
+ // digitalWrite(eRIC_WAKE, HIGH); // Enable eRIC
 
   pixels.begin(); // This initializes the NeoPixel library.
   delay(100); // Seems necessary to make the NeoPixel start reliably 
@@ -594,6 +615,8 @@ void setup()
   total = numReadings * 822;
   vbat = 5.3;
 
+
+/* Delete this
   // Configure the eRIC then put it into low power mode
   // Serial data from the eRIC (apart from the serial number) is ignored
   // so the code won't hang if the radio board is not connected
@@ -659,6 +682,8 @@ void setup()
   while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
   
   digitalWrite(eRIC_WAKE, LOW); // Disable eRIC
+
+  */
 }
 
 void loop()
@@ -712,6 +737,11 @@ void loop()
       break;
       
     case start_GPS:
+
+#ifdef SKIP_GPS
+  loop_step = read_pressure;
+  break;
+#endif    
 
 #ifndef NoLED
       LED_blue(); // Set LED to Blue
@@ -854,6 +884,7 @@ void loop()
       break;
 
     case read_pressure:
+  
       // Start the MPL3115A2 (does Wire.begin())
       if (baro.begin()) {
         // Read pressure twice to avoid first erroneous value
@@ -875,11 +906,37 @@ void loop()
       Serial.println("Powering down the GPS and MPL3115A2...");
       digitalWrite(GPS_EN, GPS_OFF); // Disable the GPS and MPL3115A2
 
-      loop_step = start_LTC3225;
+      loop_step = read_iMET;
 
       break;
 
+
+    case read_iMET:
+
+      // Start reading iMET radiosonde
+
+      Serial.println("START Reading iMET Radiosonde data");
+
+      loop_step = read_inst2;
+
+      break;
+
+    case read_inst2:
+
+      // Start reading instrument #2
+
+      Serial.println("START Reading instrument #2 data");
+
+      loop_step = start_LTC3225;
+
+      break;
+    
     case start_LTC3225:
+
+#ifdef SKIP_CHARGER
+  loop_step = start_9603;
+  break;
+#endif      
 
 #ifndef NoLED
       LED_cyan(); // Set LED to Cyan
@@ -981,6 +1038,11 @@ void loop()
       break;
 
     case start_9603:
+
+#ifdef SKIP_9603
+  loop_step = zzz;
+  break;
+#endif  
 
 #ifndef NoLED
       LED_white(); // Set LED to White
@@ -1160,6 +1222,9 @@ void loop()
               flashVarsMem.write(flashVars); // Write the flash variables
             }
 
+
+
+/*         Delete this 
             // Check if the message contains a correctly formatted RADIO message: "[RADIO=nnnnnnnn]"
             String new_radio_str;
             int new_radio = -1;
@@ -1174,6 +1239,7 @@ void loop()
                 new_radio = 1;
               }
             }
+  
             if (new_radio == 1) { // If a new radio message was received
               Serial.print("New RADIO message received. Sending: ");
               Serial.println(new_radio_str);
@@ -1230,6 +1296,7 @@ void loop()
               while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
               digitalWrite(eRIC_WAKE, LOW); // Disable eRIC
             }
+            */
 
             // Check if the message contains a correctly formatted relay pulse command: "[RELAY=1]" to "[RELAY=5]"
             starts_at = -1;
@@ -1319,9 +1386,9 @@ void loop()
       Serial.println("Putting 9603N and GNSS to sleep...");
       isbd.sleep(); // Put 9603 to sleep
       delay(1000);
-      ssIridium.end(); // Close GPS, Iridium and eRIC serial ports
+      ssIridium.end(); // Close GPS, Iridium and iMET serial ports
       ssGPS.end();
-      sseRIC.end();
+      ssiMET.end();
       delay(1000); // Wait for serial ports to clear
   
       // Disable: GPS; pressure sensor; 9603N; and Iridium supercapacitor charger

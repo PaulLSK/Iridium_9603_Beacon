@@ -14014,7 +14014,7 @@ R1 now pulls up (not down)
 A3 now connects to 9603N Ring Indicator (not Network Available)
 Added a pad for an external reset switch
 Added a pad for a battery power switch</text>
-<text x="167.64" y="124.46" size="2.54" layer="91" align="top-left">V5M:
+<text x="157.48" y="149.86" size="2.54" layer="91" align="top-left">V5M:
 
 Double AA battery capacity</text>
 </plain>

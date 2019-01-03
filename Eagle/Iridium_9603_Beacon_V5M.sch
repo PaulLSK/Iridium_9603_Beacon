@@ -14384,7 +14384,8 @@ Added a pad for an external reset switch
 Added a pad for a battery power switch</text>
 <text x="157.48" y="149.86" size="2.54" layer="91" align="top-left">V5M:
 
-Double AA battery capacity</text>
+Double AA battery capacity
+Added mounting holes (M3)</text>
 </plain>
 <instances>
 <instance part="FRAME5" gate="G$1" x="0" y="0" smashed="yes">
