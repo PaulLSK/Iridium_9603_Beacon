@@ -14362,7 +14362,8 @@ Added a pad for a battery power switch</text>
 Double AA battery capacity
 Added mounting holes (M3)
 Added SPDT Switch for power
-Removed Solar Power connections</text>
+Removed Solar Power connections
+Moved Reset Switch to Bottom</text>
 </plain>
 <instances>
 <instance part="FRAME5" gate="G$1" x="0" y="0" smashed="yes">
