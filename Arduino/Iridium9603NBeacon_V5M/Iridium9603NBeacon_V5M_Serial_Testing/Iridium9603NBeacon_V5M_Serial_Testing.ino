@@ -21,7 +21,10 @@
 
 // OMRON G6SK relay:
 // Set coil is connected to D7 (pull low to energise the relay coil)
-// Reset coil is connected to D2 (pull low to energise the relay coil)
+
+// --- Changed reset coil from D2 to D3 (prl) ----
+// Reset coil is connected to D3 (pull low to energise the relay coil)
+
 // The relay can be set/reset via an Iridium Mobile Terminated message (e.g. from RockBLOCK Operations or a Beacon Base) containing
 // [RELAY=ON] or [RELAY=OFF]
 // The relay can also be pulsed on (set) for 1-5 seconds via MT message containing
@@ -92,7 +95,11 @@
 // Setting the charging current to 150mA will reduce the time further.
 // 5.3V is OK as the 9603N has an extended supply voltage range of +5 V +/- 0.5 V
 // http://www.linear.com/product/LTC3225
-// D5 (Port A Pin 15) = LTC3225 ~Shutdown
+
+// ---  V5M Changed Port Pin For LTC3225 ~Shutdown from D5 to D8 (prl) ---
+// Original Port > D5 (Port A Pin 15) = LTC3225 ~Shutdown
+// New Port > D8 (Port A Pin 06, Physical Pin 11) = LTC3225 ~Shutdown
+
 // A1 / D15 (Port B Pin 8) = LTC3225 PGOOD
 
 // MAX-M8Q GNSS is interfaced to M0 using Serial1
@@ -109,7 +116,7 @@
 // D14 (Port A Pin 2) = AIN 0 : 1.25V precision voltage reference
 
 // D7 (Port A Pin 21) = OMRON relay set coil (pull low to energise the coil via a P-channel MOSFET)
-// D2 (Port A Pin 14) = OMRON relay reset coil (pull low to energise the coil via a P-channel MOSFET)
+// D3 (Port A Pin 09) = OMRON relay reset coil (pull low to energise the coil via a P-channel MOSFET)
 
 // As the solar panel or battery voltage drops, reported VBUS on A7 drops to ~3.4V and then flatlines
 // as the 3.3V rail starts to collapse. The 1.25V reference on A0 allows lower voltages to be measured
@@ -275,7 +282,7 @@ static const uint8_t setGNSS[] = {
 static const int len_setGNSS = 66;
 
 static const int ringIndicator = 17; // 9602 Ring Indicator on pin D17
-static const int LTC3225shutdown = 5; // LTC3225 ~Shutdown on pin D5
+static const int LTC3225shutdown = 8; // LTC3225 ~Shutdown on pin D8
 static const int LTC3225PGOOD = 15; // LTC3225 PGOOD on pin A1 / D15
 static const int Enable_9603N = 19; // 9603N Enable (enables EXT_PWR via P-MOSFET)
 static const int IridiumSleepPin = 6; // Iridium Sleep connected to D6
@@ -304,7 +311,7 @@ static const int GPS_EN = 11; // GPS & MPL3115A2 Enable on pin D11
 #define VBAT_LOW 3.05 // Minimum voltage for LTC3225
 
 static const int set_coil = 7; // OMRON G6SK relay set coil (pull low to energise coil)
-static const int reset_coil = 2; // OMRON G6SK relay reset coil (pull low to energise coil)
+static const int reset_coil = 3; // OMRON G6SK relay reset coil (pull low to energise coil)
 
 // Loop Steps
 #define init          0

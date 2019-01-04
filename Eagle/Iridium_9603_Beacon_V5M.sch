@@ -12212,6 +12212,14 @@ Locking Lever</description>
 <part name="BAT6" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 <part name="U$53" library="argol-eagle-library" deviceset="7101K2AV2QE" device=""/>
 <part name="FD3" library="SparkFun-Aesthetics" deviceset="FIDUCIAL" device="1X2"/>
+<part name="SERCOM2_TX" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
+<part name="GND4" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
+<part name="GND5" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
+<part name="SERCOM2_RX" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
+<part name="U$34" library="microbuilder" deviceset="GND" device=""/>
+<part name="U$54" library="microbuilder" deviceset="GND" device=""/>
+<part name="GND6" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
+<part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -12557,7 +12565,7 @@ power switch</text>
 <text x="50.8" y="106.68" size="2.1844" layer="94">MICROCONTROLLER</text>
 <wire x1="134.62" y1="38.1" x2="134.62" y2="116.84" width="0.1524" layer="94" style="shortdash"/>
 <text x="238.76" y="76.2" size="2.1844" layer="94" align="bottom-center">WS2812B</text>
-<text x="165.1" y="170.18" size="2.1844" layer="94">SOLAR PANEL CONNECTIONS</text>
+<text x="165.1" y="170.18" size="2.1844" layer="94">SERIAL PORT INSTRUMENT 2</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$3" x="134.62" y="2.54" smashed="yes">
@@ -12810,6 +12818,35 @@ power switch</text>
 <attribute name="NAME" x="201.93" y="94.615" size="1.778" layer="95"/>
 <attribute name="VALUE" x="201.93" y="86.36" size="1.778" layer="96"/>
 </instance>
+<instance part="SERCOM2_TX" gate="G$1" x="185.42" y="160.02" smashed="yes">
+<attribute name="NAME" x="179.07" y="163.195" size="1.778" layer="95"/>
+<attribute name="VALUE" x="179.07" y="154.94" size="1.778" layer="96"/>
+</instance>
+<instance part="GND4" gate="G$1" x="185.42" y="139.7" smashed="yes">
+<attribute name="NAME" x="179.07" y="142.875" size="1.778" layer="95"/>
+<attribute name="VALUE" x="179.07" y="134.62" size="1.778" layer="96"/>
+</instance>
+<instance part="GND5" gate="G$1" x="185.42" y="129.54" smashed="yes">
+<attribute name="NAME" x="179.07" y="132.715" size="1.778" layer="95"/>
+<attribute name="VALUE" x="179.07" y="124.46" size="1.778" layer="96"/>
+</instance>
+<instance part="SERCOM2_RX" gate="G$1" x="185.42" y="149.86" smashed="yes">
+<attribute name="NAME" x="179.07" y="153.035" size="1.778" layer="95"/>
+<attribute name="VALUE" x="179.07" y="144.78" size="1.778" layer="96"/>
+</instance>
+<instance part="U$34" gate="G$1" x="175.26" y="127" smashed="yes">
+<attribute name="VALUE" x="173.736" y="124.46" size="1.27" layer="96"/>
+</instance>
+<instance part="U$54" gate="G$1" x="175.26" y="137.16" smashed="yes">
+<attribute name="VALUE" x="173.736" y="134.62" size="1.27" layer="96"/>
+</instance>
+<instance part="GND6" gate="G$1" x="160.02" y="93.98" smashed="yes">
+<attribute name="NAME" x="153.67" y="97.155" size="1.778" layer="95"/>
+<attribute name="VALUE" x="153.67" y="88.9" size="1.778" layer="96"/>
+</instance>
+<instance part="GND14" gate="1" x="149.86" y="91.44" smashed="yes">
+<attribute name="VALUE" x="147.32" y="88.9" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -12919,6 +12956,21 @@ power switch</text>
 <pinref part="LED2" gate="G$1" pin="C"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="223.52" y1="53.34" x2="223.52" y2="48.26" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$54" gate="G$1" pin="GND"/>
+<pinref part="GND4" gate="G$1" pin="1"/>
+<wire x1="175.26" y1="139.7" x2="182.88" y2="139.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$34" gate="G$1" pin="GND"/>
+<pinref part="GND5" gate="G$1" pin="1"/>
+<wire x1="175.26" y1="129.54" x2="182.88" y2="129.54" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND14" gate="1" pin="GND"/>
+<pinref part="GND6" gate="G$1" pin="1"/>
+<wire x1="149.86" y1="93.98" x2="157.48" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MOSI" class="0">
@@ -13226,6 +13278,11 @@ power switch</text>
 <wire x1="119.38" y1="50.8" x2="101.6" y2="50.8" width="0.1524" layer="91"/>
 <label x="109.22" y="50.8" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SERCOM2_RX" gate="G$1" pin="1"/>
+<wire x1="182.88" y1="149.86" x2="172.72" y2="149.86" width="0.1524" layer="91"/>
+<label x="172.72" y="149.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
 </net>
 <net name="D1" class="0">
 <segment>
@@ -13356,6 +13413,11 @@ power switch</text>
 <pinref part="U5" gate="G$1" pin="PA14/I14/SERCOM2+4.2"/>
 <wire x1="101.6" y1="53.34" x2="119.38" y2="53.34" width="0.1524" layer="91"/>
 <label x="109.22" y="53.34" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SERCOM2_TX" gate="G$1" pin="1"/>
+<wire x1="182.88" y1="160.02" x2="172.72" y2="160.02" width="0.1524" layer="91"/>
+<label x="172.72" y="160.02" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="SD_CS" class="0">
@@ -13875,17 +13937,6 @@ power switch</text>
 <busses>
 </busses>
 <nets>
-<net name="D5" class="0">
-<segment>
-<label x="68.58" y="111.76" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="U3" gate="G$1" pin="~SHDN"/>
-<wire x1="68.58" y1="111.76" x2="71.12" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="R16" gate="G$1" pin="1"/>
-<wire x1="71.12" y1="111.76" x2="83.82" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="101.6" x2="71.12" y2="111.76" width="0.1524" layer="91"/>
-<junction x="71.12" y="111.76"/>
-</segment>
-</net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="C-"/>
@@ -14100,6 +14151,17 @@ power switch</text>
 <junction x="198.12" y="114.3"/>
 </segment>
 </net>
+<net name="D8" class="0">
+<segment>
+<label x="68.58" y="111.76" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="U3" gate="G$1" pin="~SHDN"/>
+<wire x1="68.58" y1="111.76" x2="71.12" y2="111.76" width="0.1524" layer="91"/>
+<pinref part="R16" gate="G$1" pin="1"/>
+<wire x1="71.12" y1="111.76" x2="83.82" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="101.6" x2="71.12" y2="111.76" width="0.1524" layer="91"/>
+<junction x="71.12" y="111.76"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -14231,16 +14293,6 @@ power switch</text>
 <label x="116.84" y="119.38" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="D2" class="0">
-<segment>
-<pinref part="Q3" gate="G$1" pin="G"/>
-<pinref part="R13" gate="G$1" pin="1"/>
-<wire x1="71.12" y1="101.6" x2="63.5" y2="101.6" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="101.6" x2="48.26" y2="101.6" width="0.1524" layer="91"/>
-<junction x="63.5" y="101.6"/>
-<label x="48.26" y="101.6" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
 <net name="RESET_RELAY" class="0">
 <segment>
 <pinref part="Q3" gate="G$1" pin="D"/>
@@ -14315,6 +14367,16 @@ power switch</text>
 <label x="88.9" y="134.62" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
+<net name="D3" class="0">
+<segment>
+<pinref part="Q3" gate="G$1" pin="G"/>
+<pinref part="R13" gate="G$1" pin="1"/>
+<wire x1="71.12" y1="101.6" x2="63.5" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="101.6" x2="50.8" y2="101.6" width="0.1524" layer="91"/>
+<junction x="63.5" y="101.6"/>
+<label x="50.8" y="101.6" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -14357,13 +14419,16 @@ R1 now pulls up (not down)
 A3 now connects to 9603N Ring Indicator (not Network Available)
 Added a pad for an external reset switch
 Added a pad for a battery power switch</text>
-<text x="157.48" y="149.86" size="2.54" layer="91" align="top-left">V5M:
+<text x="170.18" y="149.86" size="2.54" layer="91" align="top-left">V5M:
 
 Double AA battery capacity
 Added mounting holes (M3)
 Added SPDT Switch for power
 Removed Solar Power connections
-Moved Reset Switch to Bottom</text>
+Moved Reset Switch to Bottom
+Moved D2 to D3 [Coil RESET]
+Moved D5 to D8 [LTC3225shutdown]
+Added Serial TX and RX, SERCOM2 on Pins 23 and 24</text>
 </plain>
 <instances>
 <instance part="FRAME5" gate="G$1" x="0" y="0" smashed="yes">
@@ -14456,8 +14521,6 @@ the relay when both the GNSS and supercapacitor charger have been disabled.
 <approved hash="104,2,248.92,83.82,LED1,VSS,GND,,,"/>
 <approved hash="106,2,25.4,50.8,A2,,,,,"/>
 <approved hash="106,2,101.6,81.28,A4,,,,,"/>
-<approved hash="106,2,101.6,68.58,D3,,,,,"/>
-<approved hash="106,2,101.6,78.74,D8,,,,,"/>
 <approved hash="113,6,131.976,90.066,FRAME7,,,,,"/>
 </errors>
 </schematic>
