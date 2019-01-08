@@ -12061,8 +12061,8 @@ Locking Lever</description>
 <part name="+3V3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="C1" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="1uF"/>
 <part name="U$6" library="microbuilder" deviceset="GND" device=""/>
-<part name="C2" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="22pF"/>
-<part name="C4" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="22pF"/>
+<part name="C2" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="12pF"/>
+<part name="C4" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="12pF"/>
 <part name="U$8" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$10" library="microbuilder" deviceset="GND" device=""/>
 <part name="X1" library="adafruit2" deviceset="XTAL" device="-3.2X1.5" value="32.768"/>
@@ -12169,7 +12169,7 @@ Locking Lever</description>
 <part name="U$43" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$44" library="microbuilder" deviceset="GND" device=""/>
 <part name="LED2" library="microbuilder" deviceset="LED" device="0805_NOOUTLINE" value="RED"/>
-<part name="R10" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="2.2K"/>
+<part name="R10" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="1K"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="U$45" library="microbuilder" deviceset="VBUS" device=""/>
 <part name="D4" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
@@ -12210,7 +12210,7 @@ Locking Lever</description>
 <part name="BAT4" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 <part name="BAT5" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
 <part name="BAT6" library="SparkFun-Electromechanical" deviceset="BATTERY" device="KEYSTONE92"/>
-<part name="U$53" library="argol-eagle-library" deviceset="7101K2AV2QE" device=""/>
+<part name="U53" library="argol-eagle-library" deviceset="7101K2AV2QE" device=""/>
 <part name="FD3" library="SparkFun-Aesthetics" deviceset="FIDUCIAL" device="1X2"/>
 <part name="SERCOM2_TX" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
 <part name="GND4" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
@@ -12361,7 +12361,7 @@ power switch</text>
 <attribute name="NAME" x="241.3" y="85.09" size="1.778" layer="95" rot="R270"/>
 <attribute name="VALUE" x="229.87" y="85.09" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="U$53" gate="G$1" x="193.04" y="71.12" smashed="yes" rot="R180"/>
+<instance part="U53" gate="G$1" x="193.04" y="71.12" smashed="yes" rot="R180"/>
 <instance part="FD3" gate="G$1" x="231.14" y="35.56" smashed="yes"/>
 </instances>
 <busses>
@@ -12415,7 +12415,7 @@ power switch</text>
 <wire x1="218.44" y1="61.722" x2="218.44" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="GND" gate="G$1" pin="1"/>
 <wire x1="210.312" y1="61.722" x2="218.44" y2="61.722" width="0.1524" layer="91"/>
-<pinref part="U$53" gate="G$1" pin="P$1"/>
+<pinref part="U53" gate="G$1" pin="P$1"/>
 <wire x1="180.34" y1="66.04" x2="180.34" y2="61.722" width="0.1524" layer="91"/>
 <wire x1="180.34" y1="61.722" x2="210.312" y2="61.722" width="0.1524" layer="91"/>
 <junction x="210.312" y="61.722"/>
@@ -12519,7 +12519,7 @@ power switch</text>
 <wire x1="236.22" y1="76.2" x2="218.44" y2="76.2" width="0.1524" layer="91"/>
 <junction x="218.44" y="76.2"/>
 <junction x="210.312" y="71.882"/>
-<pinref part="U$53" gate="G$1" pin="P$2"/>
+<pinref part="U53" gate="G$1" pin="P$2"/>
 <wire x1="210.312" y1="71.882" x2="210.312" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="210.312" y1="71.12" x2="198.12" y2="71.12" width="0.1524" layer="91"/>
 </segment>
