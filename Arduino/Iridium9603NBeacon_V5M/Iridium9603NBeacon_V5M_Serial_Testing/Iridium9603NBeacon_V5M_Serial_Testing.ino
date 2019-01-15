@@ -149,6 +149,7 @@
 #include <PString.h> // String buffer formatting: http://arduiniana.org
 
 #include <Adafruit_NeoPixel.h> // Support for the WB2812B
+#include "wiring_private.h"
 
 #include <RTCZero.h> // M0 Real Time Clock
 RTCZero rtc; // Create an rtc object
@@ -158,7 +159,8 @@ RTCZero rtc; // Create an rtc object
 // capacitor charge time; gnss fix time; Iridium timeout; etc.
 // The default value will be overwritten with the one stored in Flash - if one exists
 // The value can be changed via a Mobile Terminated message
-int BEACON_INTERVAL = 5;
+//int BEACON_INTERVAL = 5;
+int BEACON_INTERVAL = 2;
 
 // Flash Storage
 #include <FlashStorage.h>
@@ -184,12 +186,12 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 // Serial Port Definisions
 // SERCOM0 -> Serial1 -> GPS
 // SERCOM1 -> Serial2 -> Iridium
-// SERCOM2
+// SERCOM2 -> Serial4 -> Inst2
 // SERCOM3 -> I2C -> Pressure
 // SERCOM4 -> Serial3 -> iMET
 // SERCOM5 -> Serial -> USBSerial
 
-
+// SERCOM1 -> Serial2 -> Iridium
 // Serial2 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
 #define PIN_SERIAL2_RX       (34ul)               // Pin description number for PIO_SERCOM on D12 (Physical Pin 28)
 #define PIN_SERIAL2_TX       (36ul)               // Pin description number for PIO_SERCOM on D10 (Physical Pin 27)
@@ -199,6 +201,7 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 Uart Serial2(&sercom1, PIN_SERIAL2_RX, PIN_SERIAL2_TX, PAD_SERIAL2_RX, PAD_SERIAL2_TX);
 HardwareSerial &ssIridium(Serial2);
 
+// SERCOM4 -> Serial3 -> iMET
 // Serial3 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
 // iMET Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
 // iMET Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
@@ -210,18 +213,20 @@ HardwareSerial &ssIridium(Serial2);
 Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIAL3_TX);
 HardwareSerial &ssiMET(Serial3);
 
-/*
+// SERCOM2 -> Serial4 -> Inst2
 // Serial4 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
-// instrument Tx (input) is connected to SWCLK (Digital Pin 23, Port B Pin 10, SERCOM1 Pad 2, Serial43 Tx)
-// instrument Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM1 Pad 3, Serial4 Rx)
-#define PIN_SERIAL3_RX       (24ul)               // Pin description number for PIO_SERCOM on D24
-#define PIN_SERIAL3_TX       (23ul)               // Pin description number for PIO_SERCOM on D23
-#define PAD_SERIAL3_TX       (UART_TX_PAD_2)      // SERCOM4 Pad 2 (SC4PAD2)
-#define PAD_SERIAL3_RX       (SERCOM_RX_PAD_3)    // SERCOM4 Pad 3 (SC4PAD3)
+// instrument Tx (input) is connected to  (Digital Pin 2, Port A Pin 14, SERCOM1 Pad 2, Serial4 Tx, Physical Pin 23)
+// instrument Rx (output) is connected to (Digital Pin 5, Port A Pin 15, SERCOM1 Pad 3, Serial4 Rx, Physical Pin 24)
+#define PIN_SERIAL4_RX       (5ul)               // Pin description number for PIO_SERCOM on D5
+#define PIN_SERIAL4_TX       (2ul)               // Pin description number for PIO_SERCOM on D2
+#define PAD_SERIAL4_TX       (UART_TX_PAD_2)      // SERCOM2 Pad 2 (SC2PAD2)
+#define PAD_SERIAL4_RX       (SERCOM_RX_PAD_3)    // SERCOM2 Pad 3 (SC2PAD3)
 // Instantiate the Serial3 class
-Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIAL3_TX);
-HardwareSerial &ssiMET(Serial3);
-*/
+Uart Serial4(&sercom2, PIN_SERIAL4_RX, PIN_SERIAL4_TX, PAD_SERIAL4_RX, PAD_SERIAL4_TX);
+HardwareSerial &ssInst2(Serial4);
+
+
+// SERCOM0 -> Serial1 -> GPS
 #define ssGPS Serial1 // Use M0 Serial1 to interface to the MAX-M8Q
 
 // Leave the "#define GALILEO" uncommented to use: GPS + Galileo + GLONASS + SBAS
@@ -311,7 +316,7 @@ static const int GPS_EN = 11; // GPS & MPL3115A2 Enable on pin D11
 #define VBAT_LOW 3.05 // Minimum voltage for LTC3225
 
 static const int set_coil = 7; // OMRON G6SK relay set coil (pull low to energise coil)
-static const int reset_coil = 3; // OMRON G6SK relay reset coil (pull low to energise coil)
+static const int reset_coil = 3; // OMRON G6SK relay reset coil (pull low to energise coil) [D3]
 
 // Loop Steps
 #define init          0
@@ -350,6 +355,10 @@ bool reset_relay_flag = false;
 bool set_relay_flag = false;
 bool pulse_relay_flag = false;
 int relay_pulse_duration = 0;
+char iMET_Xdata[20] = "";
+int ssiMET_AvailableBytes = 0;
+char Inst2_Xdata[20] = "";
+int ssInst2_AvailableBytes = 0;
 
 // Storage for the average voltage during Iridium callbacks
 const int numReadings = 25;   // number of samples
@@ -421,11 +430,28 @@ void SERCOM4_Handler()
   Serial3.IrqHandler();
 }
 
+// Interrupt handler for SERCOM4 (essential for Serial4 comms)
+void SERCOM2_Handler()
+{
+  Serial4.IrqHandler();
+}
+
+
 // RTC alarm interrupt
 void alarmMatch()
 {
   int rtc_mins = rtc.getMinutes(); // Read the RTC minutes
   int rtc_hours = rtc.getHours(); // Read the RTC hours
+
+  print2digits(rtc_hours);
+  Serial.print(":");
+  print2digits(rtc_mins);
+  Serial.print(":");
+  print2digits(0);
+  
+  Serial.println();
+
+  
   if (BEACON_INTERVAL > 1440) BEACON_INTERVAL = 1440; // Limit BEACON_INTERVAL to one day
   rtc_mins = rtc_mins + BEACON_INTERVAL; // Add the BEACON_INTERVAL to the RTC minutes
   while (rtc_mins >= 60) { // If there has been an hour roll over
@@ -433,6 +459,16 @@ void alarmMatch()
     rtc_hours = rtc_hours + 1; // Add an hour
   }
   rtc_hours = rtc_hours % 24; // Check for a day roll over
+
+  print2digits(rtc_hours);
+  Serial.print(":");
+  print2digits(rtc_mins);
+  Serial.print(":");
+  print2digits(0);
+  
+  Serial.println();
+
+  
   rtc.setAlarmMinutes(rtc_mins); // Set next alarm time (minutes)
   rtc.setAlarmHours(rtc_hours); // Set next alarm time (hours)
 }
@@ -444,6 +480,9 @@ void get_vbat() {
   vrail = VREF_NORM * VBUS_NORM / vref;
 
   vbat = analogRead(VAP) * (2.0 * vrail / 1023.0); // Read 'battery' voltage from resistor divider, correcting for vrail
+
+//  !!!!!!!!!  REMOVE this for operational code !!!!!!!!!
+  vbat = 3.3;
 }
 
 void LED_off() // Turn NeoPixel off
@@ -549,8 +588,21 @@ void reset_relay()
   pinMode(reset_coil, INPUT_PULLUP); // Make relay reset_coil pin high-impedance 
 }
 
+void print2digits(int number) {
+  if (number < 10) {
+    Serial.print("0"); // print a 0 before if the number is < than 10
+  }
+  Serial.print(number);
+}
+
 void setup()
 {
+
+  // Start the serial console
+  Serial.begin(115200);
+  delay(10000); // Wait 10 secs - allow time for user to open serial monitor
+  Serial.println("INIT - START SERIAL");
+  
   pinMode(LTC3225shutdown, OUTPUT); // LTC3225 supercapacitor charger shutdown pin
   digitalWrite(LTC3225shutdown, LOW); // Disable the LTC3225 supercapacitor charger
   pinMode(LTC3225PGOOD, INPUT); // Define an input for the LTC3225 Power Good signal
@@ -693,6 +745,7 @@ void setup()
   */
 }
 
+
 void loop()
 {
   unsigned long loopStartTime = millis();
@@ -705,12 +758,33 @@ void loop()
       LED_magenta(); // Set LED to Magenta
 #endif
 
+
       // Start the serial console
-      Serial.begin(115200);
-      delay(10000); // Wait 10 secs - allow time for user to open serial monitor
+      //Serial.begin(115200);
+      //delay(10000); // Wait 10 secs - allow time for user to open serial monitor
+      //Serial.println("INIT - START SERIAL");
     
       // Send welcome message
-      Serial.println("Iridium 9603N Beacon V5");
+      Serial.println("INIT - Iridium 9603N Beacon V5");
+
+      // --------  Print date... ----------
+      print2digits(rtc.getDay());
+      Serial.print("/");
+      print2digits(rtc.getMonth());
+      Serial.print("/");
+      print2digits(rtc.getYear());
+      Serial.print(" ");
+
+      // ...and time
+      print2digits(rtc.getHours());
+      Serial.print(":");
+      print2digits(rtc.getMinutes());
+      Serial.print(":");
+      print2digits(rtc.getSeconds());
+
+      Serial.println();
+
+      // ---------  end print time -------------
 
       // Echo the BEACON_INTERVAL
       Serial.print("Using a BEACON_INTERVAL of ");
@@ -924,6 +998,16 @@ void loop()
 
       Serial.println("START Reading iMET Radiosonde data");
 
+      ssiMET.begin(9600);
+      delay(1100);
+      ssiMET_AvailableBytes = ssiMET.available();
+      if (ssiMET_AvailableBytes > 0) {
+        ssiMET.readBytes(iMET_Xdata, ssiMET_AvailableBytes);        
+        Serial.print("RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+      } else {
+        Serial.println("ERROR - iMET instrument NOT connected");
+      }
+
       loop_step = read_inst2;
 
       break;
@@ -933,6 +1017,19 @@ void loop()
       // Start reading instrument #2
 
       Serial.println("START Reading instrument #2 data");
+
+      ssInst2.begin(9600);
+      pinPeripheral(2, PIO_SERCOM);
+      pinPeripheral(5, PIO_SERCOM);
+      delay(1100);
+      ssInst2_AvailableBytes = ssInst2.available();
+      if (ssInst2_AvailableBytes > 0) {
+        ssInst2.readBytes(Inst2_Xdata, ssInst2_AvailableBytes);        
+        Serial.print("RECEIVED from Ints2: "); Serial.println(Inst2_Xdata);
+      } else {
+        Serial.println("ERROR - Ints2 instrument NOT connected");
+      }
+
 
       loop_step = start_LTC3225;
 
@@ -1393,9 +1490,10 @@ void loop()
       Serial.println("Putting 9603N and GNSS to sleep...");
       isbd.sleep(); // Put 9603 to sleep
       delay(1000);
-      ssIridium.end(); // Close GPS, Iridium and iMET serial ports
+      ssIridium.end(); // Close GPS, Iridium, iMET and Inst2  serial ports
       ssGPS.end();
       ssiMET.end();
+      ssInst2.end();
       delay(1000); // Wait for serial ports to clear
   
       // Disable: GPS; pressure sensor; 9603N; and Iridium supercapacitor charger
@@ -1429,11 +1527,12 @@ void loop()
       // Close and detach the serial console (as per CaveMoa's SimpleSleepUSB)
       Serial.println("Going to sleep until next alarm time...");
       delay(1000); // Wait for serial port to clear
-      Serial.end(); // Close the serial console
-      USBDevice.detach(); // Safely detach the USB prior to sleeping
+//      Serial.end(); // Close the serial console
+//      USBDevice.detach(); // Safely detach the USB prior to sleeping
     
       // Sleep until next alarm match
-      rtc.standbyMode();
+      //rtc.standbyMode();  // USE THIS for Operational code
+      delay(6000);   // delay only for testing REMOVE
   
       // Wake up!
       loop_step = wake;
@@ -1442,7 +1541,7 @@ void loop()
 
     case wake:
       // Attach and reopen the serial console
-      USBDevice.attach(); // Re-attach the USB
+//      USBDevice.attach(); // Re-attach the USB
       delay(1000);  // Delay added to make serial more reliable
 
       // Now loop back to init
