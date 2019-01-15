@@ -355,9 +355,9 @@ bool reset_relay_flag = false;
 bool set_relay_flag = false;
 bool pulse_relay_flag = false;
 int relay_pulse_duration = 0;
-char iMET_Xdata[20] = "";
+String iMET_Xdata = "";
 int ssiMET_AvailableBytes = 0;
-char Inst2_Xdata[20] = "";
+String Inst2_Xdata = "";
 int ssInst2_AvailableBytes = 0;
 
 // Storage for the average voltage during Iridium callbacks
@@ -999,10 +999,9 @@ void loop()
       Serial.println("START Reading iMET Radiosonde data");
 
       ssiMET.begin(9600);
-      delay(1100);
-      ssiMET_AvailableBytes = ssiMET.available();
-      if (ssiMET_AvailableBytes > 0) {
-        ssiMET.readBytes(iMET_Xdata, ssiMET_AvailableBytes);        
+      delay(1100);      
+      if (ssiMET.available() > 0) {
+        iMET_Xdata = ssiMET.readStringUntil('\n');        
         Serial.print("RECEIVED from iMET: "); Serial.println(iMET_Xdata);
       } else {
         Serial.println("ERROR - iMET instrument NOT connected");
@@ -1019,12 +1018,12 @@ void loop()
       Serial.println("START Reading instrument #2 data");
 
       ssInst2.begin(9600);
+      ssInst2.setTimeout(2000);
       pinPeripheral(2, PIO_SERCOM);
       pinPeripheral(5, PIO_SERCOM);
       delay(1100);
-      ssInst2_AvailableBytes = ssInst2.available();
-      if (ssInst2_AvailableBytes > 0) {
-        ssInst2.readBytes(Inst2_Xdata, ssInst2_AvailableBytes);        
+      if (ssInst2.available() > 0) {
+        Inst2_Xdata = ssInst2.readStringUntil('\n');        
         Serial.print("RECEIVED from Ints2: "); Serial.println(Inst2_Xdata);
       } else {
         Serial.println("ERROR - Ints2 instrument NOT connected");

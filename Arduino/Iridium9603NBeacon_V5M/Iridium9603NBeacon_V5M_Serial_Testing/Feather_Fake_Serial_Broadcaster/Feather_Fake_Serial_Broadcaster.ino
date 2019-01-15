@@ -38,12 +38,12 @@ void loop() {
 
   starttime = millis();
   
-  sprintf(outBuffer, "xdata=0101%013d", count);
+  sprintf(outBuffer, "xdata=0101%013d\n", count);
   Serial.print("SENDING to iMET: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 
   
-  sprintf(outBuffer1, "xdata=0202%013d", count);
+  sprintf(outBuffer1, "xdata=0202%013d\n", count);
   Serial.print("SENDING to Inst2: "); Serial.println(outBuffer1);
   ssInst2.write(outBuffer1);
 
