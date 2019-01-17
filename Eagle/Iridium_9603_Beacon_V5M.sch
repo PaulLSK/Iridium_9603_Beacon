@@ -1358,23 +1358,38 @@ TS-003</description>
 <wire x1="-3.75" y1="1.27" x2="-3.75" y2="0" width="0.127" layer="21"/>
 <wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="21"/>
 <wire x1="3.75" y1="0" x2="3.75" y2="1.27" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="51"/>
+<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="29"/>
+<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="30"/>
+<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="29"/>
+<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="30"/>
+<rectangle x1="-3.8735" y1="4.064" x2="-1.905" y2="5.3975" layer="31"/>
+<rectangle x1="1.905" y1="4.064" x2="3.8735" y2="5.3975" layer="31"/>
+<rectangle x1="-3.3655" y1="0.889" x2="-2.0955" y2="3.683" layer="31"/>
+<rectangle x1="-3.8735" y1="3.1115" x2="-2.0955" y2="3.683" layer="31"/>
+<rectangle x1="2.0955" y1="3.1115" x2="3.8735" y2="3.683" layer="31"/>
+<rectangle x1="2.0955" y1="0.889" x2="3.3655" y2="3.683" layer="31"/>
+<smd name="BASE@1" x="-0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
 <smd name="BASE@2" x="0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
+<smd name="D+" x="0" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="D-" x="-0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="GND" x="1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="ID" x="0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<pad name="SPRT@1" x="-2.73558125" y="1.678940625" drill="0.7" diameter="1.250009375" shape="square" stop="no"/>
+<pad name="SPRT@2" x="2.73558125" y="1.678940625" drill="0.7" diameter="1.250009375" shape="square" stop="no"/>
+<pad name="SPRT@3" x="-2.4257" y="4.747259375" drill="0.6499875" diameter="1.016" shape="square" stop="no"/>
+<pad name="SPRT@4" x="2.4257" y="4.747259375" drill="0.6499875" diameter="1.016" shape="square" stop="no"/>
+<smd name="VBUS" x="-1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
 <text x="0.2159" y="0.3053" size="0.4064" layer="51" ratio="16" align="center">PCB EDGE</text>
 <text x="-3.794" y="-1.2419" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
 <text x="-3.794" y="-1.9523" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
-<smd name="BASE@1" x="-0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
-<smd name="D+" x="0" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="ID" x="0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="D-" x="-0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="GND" x="1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="VBUS" x="-1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
 <polygon width="0.127" layer="1">
 <vertex x="-3.8365" y="5.3965"/>
 <vertex x="-1.963496875" y="5.3965"/>
 <vertex x="-1.963496875" y="4.0635"/>
 <vertex x="-3.8365" y="4.0635"/>
 </polygon>
-<polygon width="0" layer="46">
+<polygon width="0.0762" layer="46">
 <vertex x="-2.4257" y="5.2578" curve="-90"/>
 <vertex x="-2.10070625" y="4.93280625"/>
 <vertex x="-2.1007" y="4.9328"/>
@@ -1383,7 +1398,7 @@ TS-003</description>
 <vertex x="-2.7507" y="4.5328"/>
 <vertex x="-2.7507" y="4.9328" curve="-90"/>
 </polygon>
-<polygon width="0" layer="46">
+<polygon width="0.0762" layer="46">
 <vertex x="2.4257" y="4.2037" curve="-90"/>
 <vertex x="2.10070625" y="4.52869375"/>
 <vertex x="2.1007" y="4.5287"/>
@@ -1392,7 +1407,7 @@ TS-003</description>
 <vertex x="2.7507" y="4.9287"/>
 <vertex x="2.7507" y="4.5287" curve="-90"/>
 </polygon>
-<polygon width="0" layer="46">
+<polygon width="0.0762" layer="46">
 <vertex x="-2.7559" y="2.2987"/>
 <vertex x="-2.6924" y="2.2987" curve="-90"/>
 <vertex x="-2.3876" y="1.9939"/>
@@ -1402,7 +1417,7 @@ TS-003</description>
 <vertex x="-3.0861" y="1.4097"/>
 <vertex x="-3.0861" y="1.9685" curve="-90"/>
 </polygon>
-<polygon width="0" layer="46">
+<polygon width="0.0762" layer="46">
 <vertex x="2.7559" y="2.2987"/>
 <vertex x="2.6924" y="2.2987" curve="90"/>
 <vertex x="2.3876" y="1.9939"/>
@@ -1412,53 +1427,46 @@ TS-003</description>
 <vertex x="3.0861" y="1.4097"/>
 <vertex x="3.0861" y="1.9685" curve="90"/>
 </polygon>
-<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="51"/>
-<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="29"/>
-<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="30"/>
-<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="29"/>
-<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="30"/>
-<polygon width="0" layer="29">
-<vertex x="-1.9558" y="3.8481"/>
+<polygon width="0.0762" layer="29">
+<vertex x="-1.9558" y="3.81"/>
 <vertex x="-1.9558" y="0.8763" curve="-90"/>
 <vertex x="-2.4638" y="0.381"/>
 <vertex x="-2.9718" y="0.381" curve="-90"/>
 <vertex x="-3.4671" y="0.8763"/>
 <vertex x="-3.4671" y="2.9464"/>
 <vertex x="-4.0005" y="2.9464"/>
-<vertex x="-4.0005" y="3.8481"/>
+<vertex x="-4.0005" y="3.81"/>
 </polygon>
-<polygon width="0" layer="29">
-<vertex x="1.9558" y="3.8481"/>
+<polygon width="0.0762" layer="29">
+<vertex x="1.9558" y="3.81"/>
 <vertex x="1.9558" y="0.8763" curve="90"/>
 <vertex x="2.4638" y="0.381"/>
 <vertex x="2.9718" y="0.381" curve="90"/>
 <vertex x="3.4671" y="0.8763"/>
 <vertex x="3.4671" y="2.9464"/>
 <vertex x="4.0005" y="2.9464"/>
-<vertex x="4.0005" y="3.8481"/>
+<vertex x="4.0005" y="3.81"/>
 </polygon>
-<polygon width="0" layer="30">
-<vertex x="1.9558" y="3.8481"/>
+<polygon width="0.0762" layer="30">
+<vertex x="1.9558" y="3.81"/>
 <vertex x="1.9558" y="0.8763" curve="90"/>
 <vertex x="2.4638" y="0.381"/>
 <vertex x="2.9718" y="0.381" curve="90"/>
 <vertex x="3.4671" y="0.8763"/>
 <vertex x="3.4671" y="2.9464"/>
 <vertex x="4.0005" y="2.9464"/>
-<vertex x="4.0005" y="3.8481"/>
+<vertex x="4.0005" y="3.81"/>
 </polygon>
-<polygon width="0" layer="30">
-<vertex x="-1.9558" y="3.8481"/>
+<polygon width="0.0762" layer="30">
+<vertex x="-1.9558" y="3.81"/>
 <vertex x="-1.9558" y="0.8763" curve="-90"/>
 <vertex x="-2.4638" y="0.381"/>
 <vertex x="-2.9718" y="0.381" curve="-90"/>
 <vertex x="-3.4671" y="0.8763"/>
 <vertex x="-3.4671" y="2.9464"/>
 <vertex x="-4.0005" y="2.9464"/>
-<vertex x="-4.0005" y="3.8481"/>
+<vertex x="-4.0005" y="3.81"/>
 </polygon>
-<pad name="SPRT@1" x="-2.73558125" y="1.678940625" drill="0.7" diameter="1.250009375" shape="square" stop="no"/>
-<pad name="SPRT@2" x="2.73558125" y="1.678940625" drill="0.7" diameter="1.250009375" shape="square" stop="no"/>
 <polygon width="0.127" layer="16">
 <vertex x="2.1336" y="3.67665"/>
 <vertex x="2.1336" y="0.8636" curve="90"/>
@@ -1469,8 +1477,6 @@ TS-003</description>
 <vertex x="3.8354" y="3.1115"/>
 <vertex x="3.8354" y="3.67665"/>
 </polygon>
-<pad name="SPRT@3" x="-2.4257" y="4.747259375" drill="0.6499875" diameter="1.016" shape="square" stop="no"/>
-<pad name="SPRT@4" x="2.4257" y="4.747259375" drill="0.6499875" diameter="1.016" shape="square" stop="no"/>
 <polygon width="0.127" layer="16">
 <vertex x="3.84285" y="4.065"/>
 <vertex x="1.963496875" y="4.065"/>
@@ -1519,152 +1525,6 @@ TS-003</description>
 <vertex x="-3.8354" y="3.1115"/>
 <vertex x="-3.8354" y="3.67665"/>
 </polygon>
-<rectangle x1="-3.8735" y1="4.064" x2="-1.905" y2="5.3975" layer="31"/>
-<rectangle x1="1.905" y1="4.064" x2="3.8735" y2="5.3975" layer="31"/>
-<rectangle x1="-3.3655" y1="0.889" x2="-2.0955" y2="3.683" layer="31"/>
-<rectangle x1="-3.8735" y1="3.1115" x2="-2.0955" y2="3.683" layer="31"/>
-<rectangle x1="2.0955" y1="3.1115" x2="3.8735" y2="3.683" layer="31"/>
-<rectangle x1="2.0955" y1="0.889" x2="3.3655" y2="3.683" layer="31"/>
-</package>
-<package name="FCI_10103594_MILL">
-<wire x1="-3.7573" y1="5.6466" x2="-2.9573" y2="5.6466" width="0.127" layer="21"/>
-<wire x1="2.9573" y1="5.6466" x2="3.7573" y2="5.6466" width="0.127" layer="21"/>
-<wire x1="-3.75" y1="1.27" x2="-3.75" y2="0" width="0.127" layer="21"/>
-<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="21"/>
-<wire x1="3.75" y1="0" x2="3.75" y2="1.27" width="0.127" layer="21"/>
-<smd name="BASE@2" x="0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
-<text x="0.2159" y="0.3053" size="0.4064" layer="51" ratio="16" align="center">PCB EDGE</text>
-<text x="-3.794" y="-1.2419" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
-<text x="-3.794" y="-1.9523" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
-<smd name="BASE@1" x="-0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
-<smd name="D+" x="0" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="ID" x="0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="D-" x="-0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="GND" x="1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<smd name="VBUS" x="-1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
-<polygon width="0.127" layer="1">
-<vertex x="-3.8365" y="5.3965"/>
-<vertex x="-1.963496875" y="5.3965"/>
-<vertex x="-1.963496875" y="4.0635"/>
-<vertex x="-3.8365" y="4.0635"/>
-</polygon>
-<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="51"/>
-<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="29"/>
-<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="30"/>
-<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="29"/>
-<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="30"/>
-<polygon width="0" layer="29">
-<vertex x="-1.9558" y="3.8481"/>
-<vertex x="-1.9558" y="0.8763" curve="-90"/>
-<vertex x="-2.4638" y="0.381"/>
-<vertex x="-2.9718" y="0.381" curve="-90"/>
-<vertex x="-3.4671" y="0.8763"/>
-<vertex x="-3.4671" y="2.9464"/>
-<vertex x="-4.0005" y="2.9464"/>
-<vertex x="-4.0005" y="3.8481"/>
-</polygon>
-<polygon width="0" layer="29">
-<vertex x="1.9558" y="3.8481"/>
-<vertex x="1.9558" y="0.8763" curve="90"/>
-<vertex x="2.4638" y="0.381"/>
-<vertex x="2.9718" y="0.381" curve="90"/>
-<vertex x="3.4671" y="0.8763"/>
-<vertex x="3.4671" y="2.9464"/>
-<vertex x="4.0005" y="2.9464"/>
-<vertex x="4.0005" y="3.8481"/>
-</polygon>
-<polygon width="0" layer="30">
-<vertex x="1.9558" y="3.8481"/>
-<vertex x="1.9558" y="0.8763" curve="90"/>
-<vertex x="2.4638" y="0.381"/>
-<vertex x="2.9718" y="0.381" curve="90"/>
-<vertex x="3.4671" y="0.8763"/>
-<vertex x="3.4671" y="2.9464"/>
-<vertex x="4.0005" y="2.9464"/>
-<vertex x="4.0005" y="3.8481"/>
-</polygon>
-<polygon width="0" layer="30">
-<vertex x="-1.9558" y="3.8481"/>
-<vertex x="-1.9558" y="0.8763" curve="-90"/>
-<vertex x="-2.4638" y="0.381"/>
-<vertex x="-2.9718" y="0.381" curve="-90"/>
-<vertex x="-3.4671" y="0.8763"/>
-<vertex x="-3.4671" y="2.9464"/>
-<vertex x="-4.0005" y="2.9464"/>
-<vertex x="-4.0005" y="3.8481"/>
-</polygon>
-<pad name="SPRT@1" x="-2.77495" y="1.700021875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
-<pad name="SPRT@2" x="2.77495" y="1.700021875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
-<polygon width="0.127" layer="16">
-<vertex x="2.1336" y="3.67665"/>
-<vertex x="2.1336" y="0.8636" curve="90"/>
-<vertex x="2.4892" y="0.5588"/>
-<vertex x="2.9718" y="0.5588" curve="90"/>
-<vertex x="3.302" y="0.9017"/>
-<vertex x="3.302" y="3.1115"/>
-<vertex x="3.8354" y="3.1115"/>
-<vertex x="3.8354" y="3.67665"/>
-</polygon>
-<pad name="SPRT@3" x="-2.4257" y="4.7299875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
-<pad name="SPRT@4" x="2.4257" y="4.7299875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
-<polygon width="0.127" layer="16">
-<vertex x="3.84285" y="4.065"/>
-<vertex x="1.963496875" y="4.065"/>
-<vertex x="1.963496875" y="5.398"/>
-<vertex x="3.84285" y="5.398"/>
-</polygon>
-<polygon width="0.127" layer="16">
-<vertex x="-3.8365" y="5.3965"/>
-<vertex x="-1.963496875" y="5.3965"/>
-<vertex x="-1.963496875" y="4.0635"/>
-<vertex x="-3.8365" y="4.0635"/>
-</polygon>
-<polygon width="0.127" layer="1">
-<vertex x="3.84285" y="4.065"/>
-<vertex x="1.963496875" y="4.065"/>
-<vertex x="1.963496875" y="5.398"/>
-<vertex x="3.84285" y="5.398"/>
-</polygon>
-<polygon width="0.127" layer="1">
-<vertex x="2.1336" y="3.67665"/>
-<vertex x="2.1336" y="0.8636" curve="90"/>
-<vertex x="2.4892" y="0.5588"/>
-<vertex x="2.9718" y="0.5588" curve="90"/>
-<vertex x="3.302" y="0.9017"/>
-<vertex x="3.302" y="3.1115"/>
-<vertex x="3.8354" y="3.1115"/>
-<vertex x="3.8354" y="3.67665"/>
-</polygon>
-<polygon width="0.127" layer="16">
-<vertex x="-2.1336" y="3.67665"/>
-<vertex x="-2.1336" y="0.8636" curve="-90"/>
-<vertex x="-2.4892" y="0.5588"/>
-<vertex x="-2.9718" y="0.5588" curve="-90"/>
-<vertex x="-3.302" y="0.9017"/>
-<vertex x="-3.302" y="3.1115"/>
-<vertex x="-3.8354" y="3.1115"/>
-<vertex x="-3.8354" y="3.67665"/>
-</polygon>
-<polygon width="0.127" layer="1">
-<vertex x="-2.1336" y="3.67665"/>
-<vertex x="-2.1336" y="0.8636" curve="-90"/>
-<vertex x="-2.4892" y="0.5588"/>
-<vertex x="-2.9718" y="0.5588" curve="-90"/>
-<vertex x="-3.302" y="0.9017"/>
-<vertex x="-3.302" y="3.1115"/>
-<vertex x="-3.8354" y="3.1115"/>
-<vertex x="-3.8354" y="3.67665"/>
-</polygon>
-<rectangle x1="-3.8735" y1="4.064" x2="-1.905" y2="5.3975" layer="31"/>
-<rectangle x1="1.905" y1="4.064" x2="3.8735" y2="5.3975" layer="31"/>
-<rectangle x1="-3.3655" y1="0.889" x2="-2.0955" y2="3.683" layer="31"/>
-<rectangle x1="-3.8735" y1="3.1115" x2="-2.0955" y2="3.683" layer="31"/>
-<rectangle x1="2.0955" y1="3.1115" x2="3.8735" y2="3.683" layer="31"/>
-<rectangle x1="2.0955" y1="0.889" x2="3.3655" y2="3.683" layer="31"/>
-<wire x1="-2.4257" y1="4.880103125" x2="-2.4257" y2="4.579975" width="0.8001" layer="46"/>
-<wire x1="2.4257" y1="4.880103125" x2="2.4257" y2="4.579975" width="0.8001" layer="46"/>
-<wire x1="-2.77495" y1="1.925015625" x2="-2.77495" y2="1.475028125" width="0.8001" layer="46"/>
-<wire x1="2.77495" y1="1.925015625" x2="2.77495" y2="1.475028125" width="0.8001" layer="46"/>
 </package>
 <package name="U.FL">
 <wire x1="1.3" y1="0.7" x2="1.3" y2="2.1" width="0.2032" layer="21"/>
@@ -2078,6 +1938,146 @@ TS-003</description>
 <wire x1="1.55" y1="-1.6" x2="1.75" y2="-1.45" width="0.127" layer="21" curve="90"/>
 <text x="-1.79" y="1.84" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
 <text x="-1.74" y="-2.16" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
+</package>
+<package name="FCI_10103594_MILL">
+<wire x1="-3.7573" y1="5.6466" x2="-2.9573" y2="5.6466" width="0.127" layer="21"/>
+<wire x1="2.9573" y1="5.6466" x2="3.7573" y2="5.6466" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="1.27" x2="-3.75" y2="0" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="21"/>
+<wire x1="3.75" y1="0" x2="3.75" y2="1.27" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="0" x2="3.75" y2="0" width="0.127" layer="51"/>
+<wire x1="-2.4257" y1="4.880103125" x2="-2.4257" y2="4.579975" width="0.8001" layer="46"/>
+<wire x1="2.4257" y1="4.880103125" x2="2.4257" y2="4.579975" width="0.8001" layer="46"/>
+<wire x1="-2.77495" y1="1.925015625" x2="-2.77495" y2="1.475028125" width="0.8001" layer="46"/>
+<wire x1="2.77495" y1="1.925015625" x2="2.77495" y2="1.475028125" width="0.8001" layer="46"/>
+<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="29"/>
+<rectangle x1="-4.0005" y1="3.8989" x2="-1.8034" y2="5.5626" layer="30"/>
+<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="29"/>
+<rectangle x1="1.8034" y1="3.8989" x2="4.0005" y2="5.5626" layer="30"/>
+<rectangle x1="-3.8735" y1="4.064" x2="-1.905" y2="5.3975" layer="31"/>
+<rectangle x1="1.905" y1="4.064" x2="3.8735" y2="5.3975" layer="31"/>
+<rectangle x1="-3.3655" y1="0.889" x2="-2.0955" y2="3.683" layer="31"/>
+<rectangle x1="-3.8735" y1="3.1115" x2="-2.0955" y2="3.683" layer="31"/>
+<rectangle x1="2.0955" y1="3.1115" x2="3.8735" y2="3.683" layer="31"/>
+<rectangle x1="2.0955" y1="0.889" x2="3.3655" y2="3.683" layer="31"/>
+<smd name="BASE@1" x="-0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
+<smd name="BASE@2" x="0.9625" y="1.45" dx="2.49999375" dy="1.424940625" layer="1" rot="R90"/>
+<smd name="D+" x="0" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="D-" x="-0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="GND" x="1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<smd name="ID" x="0.6500125" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<pad name="SPRT@1" x="-2.77495" y="1.700021875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
+<pad name="SPRT@2" x="2.77495" y="1.700021875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
+<pad name="SPRT@3" x="-2.4257" y="4.7299875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
+<pad name="SPRT@4" x="2.4257" y="4.7299875" drill="0.8001" diameter="1.016" shape="square" stop="no"/>
+<smd name="VBUS" x="-1.3" y="4.525" dx="0.4" dy="1.75" layer="1"/>
+<text x="0.2159" y="0.3053" size="0.4064" layer="51" ratio="16" align="center">PCB EDGE</text>
+<text x="-3.794" y="-1.2419" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
+<text x="-3.794" y="-1.9523" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
+<polygon width="0.127" layer="1">
+<vertex x="-3.8365" y="5.3965"/>
+<vertex x="-1.963496875" y="5.3965"/>
+<vertex x="-1.963496875" y="4.0635"/>
+<vertex x="-3.8365" y="4.0635"/>
+</polygon>
+<polygon width="0" layer="29">
+<vertex x="-1.9558" y="3.8481"/>
+<vertex x="-1.9558" y="0.8763" curve="-90"/>
+<vertex x="-2.4638" y="0.381"/>
+<vertex x="-2.9718" y="0.381" curve="-90"/>
+<vertex x="-3.4671" y="0.8763"/>
+<vertex x="-3.4671" y="2.9464"/>
+<vertex x="-4.0005" y="2.9464"/>
+<vertex x="-4.0005" y="3.8481"/>
+</polygon>
+<polygon width="0" layer="29">
+<vertex x="1.9558" y="3.8481"/>
+<vertex x="1.9558" y="0.8763" curve="90"/>
+<vertex x="2.4638" y="0.381"/>
+<vertex x="2.9718" y="0.381" curve="90"/>
+<vertex x="3.4671" y="0.8763"/>
+<vertex x="3.4671" y="2.9464"/>
+<vertex x="4.0005" y="2.9464"/>
+<vertex x="4.0005" y="3.8481"/>
+</polygon>
+<polygon width="0" layer="30">
+<vertex x="1.9558" y="3.8481"/>
+<vertex x="1.9558" y="0.8763" curve="90"/>
+<vertex x="2.4638" y="0.381"/>
+<vertex x="2.9718" y="0.381" curve="90"/>
+<vertex x="3.4671" y="0.8763"/>
+<vertex x="3.4671" y="2.9464"/>
+<vertex x="4.0005" y="2.9464"/>
+<vertex x="4.0005" y="3.8481"/>
+</polygon>
+<polygon width="0" layer="30">
+<vertex x="-1.9558" y="3.8481"/>
+<vertex x="-1.9558" y="0.8763" curve="-90"/>
+<vertex x="-2.4638" y="0.381"/>
+<vertex x="-2.9718" y="0.381" curve="-90"/>
+<vertex x="-3.4671" y="0.8763"/>
+<vertex x="-3.4671" y="2.9464"/>
+<vertex x="-4.0005" y="2.9464"/>
+<vertex x="-4.0005" y="3.8481"/>
+</polygon>
+<polygon width="0.127" layer="16">
+<vertex x="2.1336" y="3.67665"/>
+<vertex x="2.1336" y="0.8636" curve="90"/>
+<vertex x="2.4892" y="0.5588"/>
+<vertex x="2.9718" y="0.5588" curve="90"/>
+<vertex x="3.302" y="0.9017"/>
+<vertex x="3.302" y="3.1115"/>
+<vertex x="3.8354" y="3.1115"/>
+<vertex x="3.8354" y="3.67665"/>
+</polygon>
+<polygon width="0.127" layer="16">
+<vertex x="3.84285" y="4.065"/>
+<vertex x="1.963496875" y="4.065"/>
+<vertex x="1.963496875" y="5.398"/>
+<vertex x="3.84285" y="5.398"/>
+</polygon>
+<polygon width="0.127" layer="16">
+<vertex x="-3.8365" y="5.3965"/>
+<vertex x="-1.963496875" y="5.3965"/>
+<vertex x="-1.963496875" y="4.0635"/>
+<vertex x="-3.8365" y="4.0635"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="3.84285" y="4.065"/>
+<vertex x="1.963496875" y="4.065"/>
+<vertex x="1.963496875" y="5.398"/>
+<vertex x="3.84285" y="5.398"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="2.1336" y="3.67665"/>
+<vertex x="2.1336" y="0.8636" curve="90"/>
+<vertex x="2.4892" y="0.5588"/>
+<vertex x="2.9718" y="0.5588" curve="90"/>
+<vertex x="3.302" y="0.9017"/>
+<vertex x="3.302" y="3.1115"/>
+<vertex x="3.8354" y="3.1115"/>
+<vertex x="3.8354" y="3.67665"/>
+</polygon>
+<polygon width="0.127" layer="16">
+<vertex x="-2.1336" y="3.67665"/>
+<vertex x="-2.1336" y="0.8636" curve="-90"/>
+<vertex x="-2.4892" y="0.5588"/>
+<vertex x="-2.9718" y="0.5588" curve="-90"/>
+<vertex x="-3.302" y="0.9017"/>
+<vertex x="-3.302" y="3.1115"/>
+<vertex x="-3.8354" y="3.1115"/>
+<vertex x="-3.8354" y="3.67665"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="-2.1336" y="3.67665"/>
+<vertex x="-2.1336" y="0.8636" curve="-90"/>
+<vertex x="-2.4892" y="0.5588"/>
+<vertex x="-2.9718" y="0.5588" curve="-90"/>
+<vertex x="-3.302" y="0.9017"/>
+<vertex x="-3.302" y="3.1115"/>
+<vertex x="-3.8354" y="3.1115"/>
+<vertex x="-3.8354" y="3.67665"/>
+</polygon>
 </package>
 </packages>
 <symbols>
@@ -5657,6 +5657,30 @@ DIN A4, landscape with location and doc. field</description>
 <gate name="G$1" symbol="USB" x="0" y="0"/>
 </gates>
 <devices>
+<device name="FCI_10103594" package="FCI_10103594">
+<connects>
+<connect gate="G$1" pin="D+" pad="D+"/>
+<connect gate="G$1" pin="D-" pad="D-"/>
+<connect gate="G$1" pin="GND" pad="BASE@1 BASE@2 GND SPRT@1 SPRT@2 SPRT@3 SPRT@4"/>
+<connect gate="G$1" pin="ID" pad="ID"/>
+<connect gate="G$1" pin="VBUS" pad="VBUS"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="FCI_10103594_MILL" package="FCI_10103594_MILL">
+<connects>
+<connect gate="G$1" pin="D+" pad="D+"/>
+<connect gate="G$1" pin="D-" pad="D-"/>
+<connect gate="G$1" pin="GND" pad="BASE@1 BASE@2 GND SPRT@1 SPRT@2 SPRT@3 SPRT@4"/>
+<connect gate="G$1" pin="ID" pad="ID"/>
+<connect gate="G$1" pin="VBUS" pad="VBUS"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
 <device name="MICRO_20329" package="4UCONN_20329">
 <connects>
 <connect gate="G$1" pin="D+" pad="D+"/>
@@ -5706,30 +5730,6 @@ DIN A4, landscape with location and doc. field</description>
 </technologies>
 </device>
 <device name="_MICRO_20329_V2" package="4UCONN_20329_V2">
-<connects>
-<connect gate="G$1" pin="D+" pad="D+"/>
-<connect gate="G$1" pin="D-" pad="D-"/>
-<connect gate="G$1" pin="GND" pad="BASE@1 BASE@2 GND SPRT@1 SPRT@2 SPRT@3 SPRT@4"/>
-<connect gate="G$1" pin="ID" pad="ID"/>
-<connect gate="G$1" pin="VBUS" pad="VBUS"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="FCI_10103594" package="FCI_10103594">
-<connects>
-<connect gate="G$1" pin="D+" pad="D+"/>
-<connect gate="G$1" pin="D-" pad="D-"/>
-<connect gate="G$1" pin="GND" pad="BASE@1 BASE@2 GND SPRT@1 SPRT@2 SPRT@3 SPRT@4"/>
-<connect gate="G$1" pin="ID" pad="ID"/>
-<connect gate="G$1" pin="VBUS" pad="VBUS"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="FCI_10103594_MILL" package="FCI_10103594_MILL">
 <connects>
 <connect gate="G$1" pin="D+" pad="D+"/>
 <connect gate="G$1" pin="D-" pad="D-"/>
