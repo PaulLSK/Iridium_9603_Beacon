@@ -3,7 +3,7 @@
 <eagle version="9.2.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
 <setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
@@ -163,7 +163,7 @@
 <layer number="255" name="routoute" color="7" fill="1" visible="yes" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.cGVyc29uYWw6dWUyY2Q5OTI4" projecturn="a.cGVyc29uYWw6dWUyY2Q5OTI4IzIwMTgxMjE0MTY1NTY1NzU2" f3durn="urn:adsk.wipprod:dm.lineage:w9AHYNf_Q9GseIxamkbaeA" pcbguid="954f3457-adb5-463a-954c-105c6e7f83b2" lastpulledtime="2018-12-29T03:57:47Z" lastsyncedchangeguid="a3efed41-22df-3280-2fd7-7d1e25b3e0f3"/>
+<fusionsync huburn="a.cGVyc29uYWw6dWUyY2Q5OTI4" projecturn="a.cGVyc29uYWw6dWUyY2Q5OTI4IzIwMTgxMjE0MTY1NTY1NzU2" f3durn="urn:adsk.wipprod:dm.lineage:w9AHYNf_Q9GseIxamkbaeA" pcbguid="954f3457-adb5-463a-954c-105c6e7f83b2" lastpulledtime="2018-12-29T03:57:47Z" lastsyncedchangeguid="7e7b2e13-171d-be95-e8c6-1b83e62745c9"/>
 <plain>
 <text x="29.99725" y="17.867" size="1.016" layer="1" font="vector" ratio="16">TOP</text>
 <text x="32.72775" y="17.867" size="1.016" layer="16" font="vector" ratio="16" rot="MR0">BOTTOM</text>
@@ -253,6 +253,13 @@ MAX</text>
 <dimension x1="15" y1="136.09" x2="20" y2="100" x3="-24.15" y3="118.045" textsize="1.778" layer="51" dtype="vertical"/>
 <dimension x1="14.99" y1="136.07" x2="20" y2="60" x3="-34.1" y3="98.035" textsize="1.778" layer="51" dtype="vertical"/>
 <dimension x1="15.01" y1="136.09" x2="20" y2="20" x3="-53.4" y3="78.045" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="88" y1="125" x2="74.84" y2="136.05" x3="115.85" y3="130.525" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="88" y1="125" x2="88.21" y2="134.5" x3="130.4" y3="129.75" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="51.25" y1="68.5" x2="15" y2="134.5" x3="10.64" y3="101.5" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="51.25" y1="68.5" x2="15" y2="134.5" x3="33.125" y3="-15.09" textsize="1.778" layer="51" dtype="horizontal"/>
+<dimension x1="88" y1="125" x2="20" y2="100" x3="129.22" y3="112.5" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="88" y1="125" x2="88" y2="60" x3="140.58" y3="92.5" textsize="1.778" layer="51" dtype="vertical"/>
+<dimension x1="88" y1="125" x2="88" y2="20" x3="152.88" y3="72.5" textsize="1.778" layer="51" dtype="vertical"/>
 </plain>
 <libraries>
 <library name="microbuilder">
@@ -1964,7 +1971,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <element name="U$50" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,2" package3d_urn="urn:adsk.eagle:package:14275/1" value="" x="20" y="60" smashed="yes"/>
 <element name="U$51" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,2" package3d_urn="urn:adsk.eagle:package:14275/1" value="" x="88" y="125" smashed="yes"/>
 <element name="U$52" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,2" package3d_urn="urn:adsk.eagle:package:14275/1" value="" x="20" y="100" smashed="yes"/>
-<element name="U53" library="argol-eagle-library" package="AV2_SPDT" value="7101K2AV2QE" x="19.75" y="119" smashed="yes" rot="R180"/>
+<element name="U53" library="argol-eagle-library" package="AV2_SPDT" value="7101K2AV2QE" x="19.75" y="121.5" smashed="yes" rot="R180"/>
 <element name="FD3" library="SparkFun-Aesthetics" package="FIDUCIAL-1X2" value="FIDUCIAL1X2" x="88" y="45.25" smashed="yes"/>
 <element name="U$2" library="holes" library_urn="urn:adsk.eagle:library:237" package="3,2" package3d_urn="urn:adsk.eagle:package:14275/1" value="" x="51.25" y="68.5" smashed="yes"/>
 <element name="SERCOM2_TX" library="adafruit" library_urn="urn:adsk.eagle:library:420" package="1X01" package3d_urn="urn:adsk.eagle:package:6240654/1" value="" x="20" y="88" smashed="yes">
@@ -2457,19 +2464,20 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="64" y1="69.149496875" x2="63.939009375" y2="69.149496875" width="0.4064" layer="1"/>
 <contactref element="U53" pad="P$1"/>
 <wire x1="26.25" y1="123.15" x2="19.75" y2="123.15" width="0.8128" layer="1"/>
-<wire x1="19.75" y1="123.15" x2="19.75" y2="119" width="0.8128" layer="1"/>
+<wire x1="19.75" y1="123.15" x2="19.75" y2="121.5" width="0.8128" layer="1"/>
 <wire x1="91.4032" y1="105.75" x2="91.4032" y2="109.688" width="0.4064" layer="1"/>
 <wire x1="42.95975" y1="69.175" x2="42.95975" y2="14.20605625" width="0.4064" layer="1"/>
 <wire x1="42.95975" y1="14.20605625" x2="47.500646875" y2="14.20605625" width="0.4064" layer="1"/>
-<wire x1="19.75" y1="119" x2="18" y2="119" width="0.4064" layer="16"/>
-<wire x1="18" y1="119" x2="17.67075" y2="118.67075" width="0.4064" layer="16"/>
-<wire x1="17.67075" y1="118.67075" x2="17.67075" y2="107.07925" width="0.4064" layer="16"/>
+<wire x1="19.75" y1="121.5" x2="18.2824" y2="121.5" width="0.4064" layer="16"/>
+<wire x1="18.2824" y1="121.5" x2="18.23" y2="121.52" width="0.4064" layer="16"/>
+<wire x1="18.23" y1="121.52" x2="17.67075" y2="120.96075" width="0.4064" layer="16"/>
+<wire x1="17.67075" y1="120.96075" x2="17.67075" y2="107.07925" width="0.4064" layer="16"/>
 <wire x1="17.67075" y1="107.07925" x2="18" y2="106.75" width="0.4064" layer="16"/>
 <wire x1="18" y1="106.75" x2="22.75" y2="106.75" width="0.4064" layer="16"/>
-<wire x1="22.75" y1="106.75" x2="24.5" y2="105" width="0.4064" layer="16"/>
-<wire x1="24.5" y1="105" x2="24.5" y2="35" width="0.4064" layer="16"/>
+<wire x1="22.75" y1="106.75" x2="24.34" y2="105.16" width="0.4064" layer="16"/>
+<wire x1="24.34" y1="105.16" x2="24.34" y2="34.84" width="0.4064" layer="16"/>
 <wire x1="22.165" y1="32.665" x2="19.83" y2="32.665" width="0.4064" layer="16"/>
-<wire x1="24.5" y1="35" x2="22.165" y2="32.665" width="0.4064" layer="16"/>
+<wire x1="24.34" y1="34.84" x2="22.165" y2="32.665" width="0.4064" layer="16"/>
 <wire x1="19.83" y1="32.665" x2="19.585" y2="32.91" width="0.4064" layer="16"/>
 <wire x1="56.064" y1="103.30625" x2="56.06" y2="103.30225" width="0.2032" layer="1"/>
 <wire x1="56.06" y1="103.30225" x2="56.06" y2="102.273" width="0.2032" layer="1"/>
@@ -3689,9 +3697,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="70.86" y1="77.271" x2="67.25" y2="77.271" width="0.8128" layer="16"/>
 <wire x1="67.25" y1="51.25" x2="67.25" y2="77.271" width="0.8128" layer="16"/>
 <contactref element="U53" pad="P$2"/>
-<wire x1="19.75" y1="115.19" x2="25.75" y2="115.19" width="0.8128" layer="16"/>
-<wire x1="25.75" y1="51.25" x2="67.25" y2="51.25" width="0.8128" layer="16"/>
-<wire x1="25.75" y1="115.19" x2="25.75" y2="51.25" width="0.8128" layer="16"/>
+<wire x1="19.75" y1="117.69" x2="25.11" y2="112.33" width="0.8128" layer="16"/>
+<wire x1="25.11" y1="51.25" x2="67.25" y2="51.25" width="0.8128" layer="16"/>
+<wire x1="25.11" y1="112.33" x2="25.11" y2="51.25" width="0.8128" layer="16"/>
 <wire x1="81.69" y1="84.951" x2="81.69" y2="80.481" width="0.8128" layer="16"/>
 <wire x1="81.69" y1="80.481" x2="78.48" y2="77.271" width="0.8128" layer="16"/>
 </signal>
@@ -3728,10 +3736,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <approved hash="6,16,f759fc1b7c177755"/>
 <approved hash="6,16,2cc61580959cacda"/>
 <approved hash="6,16,26cf1a531e8320ff"/>
-<approved hash="6,16,02a302e31c9d1cdd"/>
 <approved hash="6,16,4e564119c11dce52"/>
-<approved hash="6,16,c6a6f861aeda2912"/>
-<approved hash="6,16,c026cea1df1a6892"/>
 <approved hash="6,16,f4e670cfa81c1b3a"/>
 <approved hash="6,16,369c3fd9bf25b660"/>
 <approved hash="6,16,69d336d7283b4642"/>
@@ -3740,10 +3745,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <approved hash="6,16,98df5347534998d1"/>
 <approved hash="6,16,20d91c4518a92115"/>
 <approved hash="6,16,18451d8961b56159"/>
-<approved hash="6,16,fe3870458af6543c"/>
-<approved hash="6,16,6ed12d492d486ed0"/>
 <approved hash="6,16,f976f03470307972"/>
-<approved hash="6,16,c7a5cf0f19f8af4c"/>
 <approved hash="6,16,18571daf6193614b"/>
 <approved hash="6,16,164916484ec04ec1"/>
 <approved hash="6,16,d1af28eda8ee51ac"/>
@@ -3751,21 +3753,15 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <approved hash="6,16,29d3f02bb17558b7"/>
 <approved hash="6,16,ba357f06bc524b13"/>
 <approved hash="6,16,234b2a0daa09a34f"/>
-<approved hash="6,16,c6e65512c3e6ee30"/>
 <approved hash="6,16,e145e803681f6159"/>
 <approved hash="6,16,3c99c7db47d8bc9a"/>
 <approved hash="6,16,3d51bce6694cc9d1"/>
 <approved hash="6,16,22fb1e651ab12113"/>
 <approved hash="6,16,14401f029f069444"/>
-<approved hash="6,16,c6c8225bf4efae52"/>
-<approved hash="6,16,020d01611f1f1c73"/>
 <approved hash="6,16,05800f428f468584"/>
-<approved hash="6,16,c5c8739be52fed52"/>
 <approved hash="6,16,c78ecd4c4d504792"/>
 <approved hash="6,16,1a671d8f63ad6379"/>
-<approved hash="6,16,027902a71cd91c07"/>
 <approved hash="6,16,108b1a4e9a4a908f"/>
-<approved hash="6,16,c7e0a75ef0272c80"/>
 <approved hash="6,16,adb57723abee43e5"/>
 <approved hash="6,16,54e02c66afb6dea3"/>
 <approved hash="6,16,ca132239a54f0229"/>

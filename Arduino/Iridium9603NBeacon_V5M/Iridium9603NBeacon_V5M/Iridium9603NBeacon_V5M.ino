@@ -2,12 +2,6 @@
 // # Iridium 9603N Beacon V5M #
 // ###########################
 
-// Define a variables to help testing and debugging
-#define SKIP_GPS      1
-#define SKIP_CHARGER  1
-#define SKIP_9603     1
-
-
 // This version provides support for the iMET Radiosonde
 // Radiosonde Pin# Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
 // Radiosonde Pin# Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
@@ -187,7 +181,7 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 // SERCOM0 -> Serial1 -> GPS
 // SERCOM1 -> Serial2 -> Iridium
 // SERCOM2 -> Serial4 -> Inst2
-// SERCOM3 -> I2C -> Pressure
+// SERCOM3 -> I2C -> PTU
 // SERCOM4 -> Serial3 -> iMET
 // SERCOM5 -> Serial -> USBSerial
 
@@ -598,10 +592,13 @@ void print2digits(int number) {
 void setup()
 {
 
+// ONLY FOR TESTING
+//  Putting serial here keeps console alive during loop
   // Start the serial console
   Serial.begin(115200);
   delay(10000); // Wait 10 secs - allow time for user to open serial monitor
   Serial.println("INIT - START SERIAL");
+// ONLY FOR TESTING END
   
   pinMode(LTC3225shutdown, OUTPUT); // LTC3225 supercapacitor charger shutdown pin
   digitalWrite(LTC3225shutdown, LOW); // Disable the LTC3225 supercapacitor charger
@@ -619,12 +616,6 @@ void setup()
 
   pinMode(set_coil, INPUT_PULLUP); // Initialise relay set_coil pin
   pinMode(reset_coil, INPUT_PULLUP); // Initialise relay reset_coil pin
-
-
-// delete this
- // pinMode(eRIC_BUSY, INPUT_PULLUP); // Initialise eRIC CTS / BUSY pin
- // pinMode(eRIC_WAKE, OUTPUT); // Initialise eRIC WAKE pin (PIN22)
- // digitalWrite(eRIC_WAKE, HIGH); // Enable eRIC
 
   pixels.begin(); // This initializes the NeoPixel library.
   delay(100); // Seems necessary to make the NeoPixel start reliably 
@@ -673,76 +664,6 @@ void setup()
   }
   total = numReadings * 822;
   vbat = 5.3;
-
-
-/* Delete this
-  // Configure the eRIC then put it into low power mode
-  // Serial data from the eRIC (apart from the serial number) is ignored
-  // so the code won't hang if the radio board is not connected
-  // Start the eRIC serial port
-  sseRIC.begin(19200);
-  delay(1000); // Allow time for the port to open
-  
-  sseRIC.print("ER_CMD#R0"); // Reset Radio
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(500);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-
-  sseRIC.print("ER_CMD#C5"); // Set Channel 5
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(50);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  sseRIC.print("ER_CMD#B0"); // Set Over-Air Baud Rate to 1200
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(50);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  sseRIC.print("ER_CMD#P0"); // Set Transmit Power to 0dBm
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(50);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  sseRIC.print("ER_CMD#D2"); // Set RX Power Saving
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(500);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  sseRIC.print("ER_CMD#d2"); // Set TX Power Saving
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(500);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  sseRIC.print("ER_CMD#L8?"); // Get eRIC serial number
-  delay(50);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  sseRIC.print("ACK"); // Acknowledge
-  delay(500);
-  // Transmit serial number
-  sseRIC.print("Iridium Beacon Radio Board ");
-  while(sseRIC.available()){sseRIC.write(sseRIC.read());} // Send serial number
-  sseRIC.println();
-  // Wait for the data to be transmitted
-  // We should really be checking the CTS/BUSY signal here
-  // but a simple delay won't cause the code to hang if the radio board isn't connected
-  delay(1500);
-
-  // Put eRIC into Low Power Mode 0
-  sseRIC.print("ER_CMD#A21"); // Set Low Power Mode 0
-  delay(50);
-  sseRIC.print("ACK"); // Acknowledge
-  delay(500);
-  while(sseRIC.available()){sseRIC.read();} // Clear the serial rx buffer
-  
-  digitalWrite(eRIC_WAKE, LOW); // Disable eRIC
-
-  */
 }
 
 
@@ -766,9 +687,10 @@ void loop()
       //Serial.println("INIT - START SERIAL");
     
       // Send welcome message
-      Serial.println("INIT - Iridium 9603N Beacon V5M");
+      Serial.println("INFO:: INIT - Iridium 9603N Beacon V5M");
 
       // --------  Print date... ----------
+      Serial.print("INFO:: CURRENT TIME: ");
       print2digits(rtc.getDay());
       Serial.print("/");
       print2digits(rtc.getMonth());
@@ -788,7 +710,7 @@ void loop()
       // ---------  end print time -------------
 
       // Echo the BEACON_INTERVAL
-      Serial.print("Using a BEACON_INTERVAL of ");
+      Serial.print("INFO:: Using a BEACON_INTERVAL of ");
       Serial.print(BEACON_INTERVAL);
       Serial.println(" minutes");
       
