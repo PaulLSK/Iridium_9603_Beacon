@@ -2,6 +2,13 @@
 // # Iridium 9603N Beacon V5M #
 // ###########################
 
+int VERBOSE = 1; // 0 = OFF, 1 = ON
+
+// !!!!!!!!!!!  MAKE SURE LOCALTEST and EMULATE ARE 0 FOR OPERATIONAL CODE !!!!!!!!!!!
+int LOCALTEST = 1; //0 = OFF, 1 = ON (used for serial port functionality when you want to keep the serial monitor console open)
+int EMULATE = 1; //0 = OFF, 1 = ON (used when not testing on an actual Beacon V5M board, i.e. Feather M0, Sparkfun ATSAMD21G)
+
+
 // This version provides support for the iMET Radiosonde
 // Radiosonde Pin# Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
 // Radiosonde Pin# Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
@@ -148,13 +155,13 @@
 #include <RTCZero.h> // M0 Real Time Clock
 RTCZero rtc; // Create an rtc object
 
-// Define how often messages are sent in MINUTES (max 1440)
+// ----- Changed BEACON_INTERVAL to SECONDS (V5 was in minutes) (prl) -----------------
+// Define how often messages are sent in SECONDS (max 86400)
 // This is the _quickest_ messages will be sent. Could be much slower than this depending on:
 // capacitor charge time; gnss fix time; Iridium timeout; etc.
 // The default value will be overwritten with the one stored in Flash - if one exists
 // The value can be changed via a Mobile Terminated message
-//int BEACON_INTERVAL = 5;
-int BEACON_INTERVAL = 2;
+int BEACON_INTERVAL = 12;
 
 // Flash Storage
 #include <FlashStorage.h>
@@ -180,7 +187,7 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 // Serial Port Definisions
 // SERCOM0 -> Serial1 -> GPS
 // SERCOM1 -> Serial2 -> Iridium
-// SERCOM2 -> Serial4 -> Inst2
+// SERCOM2 -> Serial4 -> DaisyChain
 // SERCOM3 -> I2C -> PTU
 // SERCOM4 -> Serial3 -> iMET
 // SERCOM5 -> Serial -> USBSerial
@@ -207,7 +214,7 @@ HardwareSerial &ssIridium(Serial2);
 Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIAL3_TX);
 HardwareSerial &ssiMET(Serial3);
 
-// SERCOM2 -> Serial4 -> Inst2
+// SERCOM2 -> Serial4 -> DaisyChain
 // Serial4 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
 // instrument Tx (input) is connected to  (Digital Pin 2, Port A Pin 14, SERCOM1 Pad 2, Serial4 Tx, Physical Pin 23)
 // instrument Rx (output) is connected to (Digital Pin 5, Port A Pin 15, SERCOM1 Pad 3, Serial4 Rx, Physical Pin 24)
@@ -217,7 +224,7 @@ HardwareSerial &ssiMET(Serial3);
 #define PAD_SERIAL4_RX       (SERCOM_RX_PAD_3)    // SERCOM2 Pad 3 (SC2PAD3)
 // Instantiate the Serial3 class
 Uart Serial4(&sercom2, PIN_SERIAL4_RX, PIN_SERIAL4_TX, PAD_SERIAL4_RX, PAD_SERIAL4_TX);
-HardwareSerial &ssInst2(Serial4);
+HardwareSerial &ssDaisyChain(Serial4);
 
 
 // SERCOM0 -> Serial1 -> GPS
@@ -313,17 +320,17 @@ static const int set_coil = 7; // OMRON G6SK relay set coil (pull low to energis
 static const int reset_coil = 3; // OMRON G6SK relay reset coil (pull low to energise coil) [D3]
 
 // Loop Steps
-#define init          0
-#define start_GPS     1
-#define read_GPS      2
-#define read_pressure 3
-#define read_iMET     4
-#define read_inst2    5
-#define start_LTC3225 6
-#define wait_LTC3225  7
-#define start_9603    8
-#define zzz           9
-#define wake          10
+#define init            0
+#define start_GPS       1
+#define read_GPS        2
+#define read_pressure   3
+#define read_DaisyChain 4
+#define start_iMET       5
+#define start_LTC3225   6
+#define wait_LTC3225    7
+#define start_9603      8
+#define zzz             9
+#define wake            10
 
 
 // Variables used by Loop
@@ -351,8 +358,8 @@ bool pulse_relay_flag = false;
 int relay_pulse_duration = 0;
 String iMET_Xdata = "";
 int ssiMET_AvailableBytes = 0;
-String Inst2_Xdata = "";
-int ssInst2_AvailableBytes = 0;
+String DaisyChain_Xdata = "";
+int ssDaisyChain_AvailableBytes = 0;
 
 // Storage for the average voltage during Iridium callbacks
 const int numReadings = 25;   // number of samples
@@ -397,9 +404,10 @@ bool ISBDCallback()
   // calculate the average:
   average_reading = total / numReadings; // Seems to work OK with integer maths - but total does need to be long int
   vbat = float(average_reading) * (2.0 * vrail / 1023.0); // Calculate average battery voltage using corrected rail voltage
+  if (EMULATE) {vbat = 3.3;}
   
   if (vbat < VBAT_LOW) {
-    Serial.print("***!!! LOW VOLTAGE (ISBDCallback) ");
+    Serial.print("[ERROR : ISBDCallback] ***!!! LOW VOLTAGE (ISBDCallback) ");
     Serial.print(vbat,2);
     Serial.println("V !!!***");
     return false; // Returning false causes IridiumSBD to terminate
@@ -434,35 +442,47 @@ void SERCOM2_Handler()
 // RTC alarm interrupt
 void alarmMatch()
 {
+  int rtc_seconds = rtc.getSeconds();
   int rtc_mins = rtc.getMinutes(); // Read the RTC minutes
   int rtc_hours = rtc.getHours(); // Read the RTC hours
 
-  print2digits(rtc_hours);
-  Serial.print(":");
-  print2digits(rtc_mins);
-  Serial.print(":");
-  print2digits(0);
-  
-  Serial.println();
+
+  if (VERBOSE) {
+    Serial.print("[INFO : alarmMatch] Current Time: ");
+    print2digits(rtc_hours);
+    Serial.print(":");
+    print2digits(rtc_mins);
+    Serial.print(":");
+    print2digits(rtc_seconds);   
+    Serial.println();
+  }
 
   
-  if (BEACON_INTERVAL > 1440) BEACON_INTERVAL = 1440; // Limit BEACON_INTERVAL to one day
-  rtc_mins = rtc_mins + BEACON_INTERVAL; // Add the BEACON_INTERVAL to the RTC minutes
+  if (BEACON_INTERVAL > 86400) BEACON_INTERVAL = 86400; // Limit BEACON_INTERVAL to one day, value in seconds
+  rtc_seconds = rtc_seconds + BEACON_INTERVAL; // Add the BEACON_INTERVAL to the RTC seconds
+  while (rtc_seconds >= 60) { // If there has been a minute roll over
+    rtc_seconds = rtc_seconds - 60; // Subtract 60 seconds
+    rtc_mins = rtc_mins + 1; // Add a minute
+  }
+
   while (rtc_mins >= 60) { // If there has been an hour roll over
     rtc_mins = rtc_mins - 60; // Subtract 60 minutes
     rtc_hours = rtc_hours + 1; // Add an hour
   }
+  
   rtc_hours = rtc_hours % 24; // Check for a day roll over
 
-  print2digits(rtc_hours);
-  Serial.print(":");
-  print2digits(rtc_mins);
-  Serial.print(":");
-  print2digits(0);
-  
-  Serial.println();
+  if (VERBOSE) {
+    Serial.print("[INFO : alarmMatch] Next Alarm Time: ");
+    print2digits(rtc_hours);
+    Serial.print(":");
+    print2digits(rtc_mins);
+    Serial.print(":");
+    print2digits(rtc_seconds);   
+    Serial.println();
+  }
 
-  
+  rtc.setAlarmSeconds(rtc_seconds);
   rtc.setAlarmMinutes(rtc_mins); // Set next alarm time (minutes)
   rtc.setAlarmHours(rtc_hours); // Set next alarm time (hours)
 }
@@ -475,8 +495,8 @@ void get_vbat() {
 
   vbat = analogRead(VAP) * (2.0 * vrail / 1023.0); // Read 'battery' voltage from resistor divider, correcting for vrail
 
-//  !!!!!!!!!  REMOVE this for operational code !!!!!!!!!
-  vbat = 3.3;
+  // MAKE SURE LOCALTEST = 0 FOR OPERATIONAL CODE
+  if (EMULATE) { vbat = 3.3; }
 }
 
 void LED_off() // Turn NeoPixel off
@@ -592,13 +612,15 @@ void print2digits(int number) {
 void setup()
 {
 
-// ONLY FOR TESTING
-//  Putting serial here keeps console alive during loop
-  // Start the serial console
-  Serial.begin(115200);
-  delay(10000); // Wait 10 secs - allow time for user to open serial monitor
-  Serial.println("INIT - START SERIAL");
-// ONLY FOR TESTING END
+  if (LOCALTEST) {
+    // ONLY FOR TESTING
+    //  Putting serial here keeps console alive during loop
+    // Start the serial console
+    Serial.begin(115200);
+    delay(10000); // Wait 10 secs - allow time for user to open serial monitor
+    Serial.println("[INFO : setup] INIT - START SERIAL - !! CHANGE LOCALTEST to 0 For OPERATIONAL !!");
+  }
+  
   
   pinMode(LTC3225shutdown, OUTPUT); // LTC3225 supercapacitor charger shutdown pin
   digitalWrite(LTC3225shutdown, LOW); // Disable the LTC3225 supercapacitor charger
@@ -650,7 +672,6 @@ void setup()
   }
 
   rtc.begin(); // Start the RTC now that BEACON_INTERVAL has been updated
-  rtc.setAlarmSeconds(rtc.getSeconds()); // Initialise RTC Alarm Seconds
   alarmMatch(); // Set next alarm time using updated BEACON_INTERVAL
   rtc.enableAlarm(rtc.MATCH_HHMMSS); // Alarm Match on hours, minutes and seconds
   rtc.attachInterrupt(alarmMatch); // Attach alarm interrupt
@@ -679,45 +700,44 @@ void loop()
       LED_magenta(); // Set LED to Magenta
 #endif
 
-
-      // UNCOMMENT for FUNCTIONAL CODE (and remove it from the setup function)
-      // Start the serial console
-      //Serial.begin(115200);
-      //delay(10000); // Wait 10 secs - allow time for user to open serial monitor
-      //Serial.println("INIT - START SERIAL");
+      if (!LOCALTEST) {        
+        // Start the serial console
+        Serial.begin(115200);
+        delay(10000); // Wait 10 secs - allow time for user to open serial monitor
+        Serial.println("[INFO : init] INIT - START SERIAL");
+      }
     
       // Send welcome message
-      Serial.println("INFO:: INIT - Iridium 9603N Beacon V5M");
-
+      Serial.print("[INFO : init] INIT - Iridium 9603N Beacon V5M at ");
       // --------  Print date... ----------
-      Serial.print("INFO:: CURRENT TIME: ");
       print2digits(rtc.getDay());
       Serial.print("/");
       print2digits(rtc.getMonth());
       Serial.print("/");
       print2digits(rtc.getYear());
       Serial.print(" ");
-
       // ...and time
       print2digits(rtc.getHours());
       Serial.print(":");
       print2digits(rtc.getMinutes());
       Serial.print(":");
       print2digits(rtc.getSeconds());
-
       Serial.println();
-
       // ---------  end print time -------------
 
+      // Echo VERBOSE, LOCALTEST and EMULATE setting
+      Serial.print("[INFO : init] VERBOSE = "); Serial.print(VERBOSE); Serial.print(" LOCALTEST = "); Serial.print(LOCALTEST); Serial.print(" EMULATE = "); Serial.println(EMULATE);
+      if (LOCALTEST or EMULATE) {Serial.println("[WARNING : init] LOCALTEST and/or EMULATE is set to TRUE");}
+
       // Echo the BEACON_INTERVAL
-      Serial.print("INFO:: Using a BEACON_INTERVAL of ");
+      Serial.print("[INFO : init] Using a BEACON_INTERVAL of ");
       Serial.print(BEACON_INTERVAL);
-      Serial.println(" minutes");
+      Serial.println(" SECONDS");
       
       // Echo RBDESTINATION and RBSOURCE
-      Serial.print("Using an RBDESTINATION of ");
+      Serial.print("[INFO : init] Using an RBDESTINATION of ");
       Serial.println(RBDESTINATION);
-      Serial.print("Using an RBSOURCE of ");
+      Serial.print("[INFO : init] Using an RBSOURCE of ");
       Serial.println(RBSOURCE);
 
       // Setup the IridiumSBD
@@ -729,7 +749,7 @@ void loop()
       // If voltage is low, go to sleep
       get_vbat();
       if (vbat < VBAT_LOW) {
-        Serial.print("***!!! LOW VOLTAGE (init) ");
+        Serial.print("[ERROR : init] ***!!! LOW VOLTAGE (init) ");
         Serial.print(vbat,2);
         Serial.println(" !!!***");
         loop_step = zzz;
@@ -742,17 +762,12 @@ void loop()
       
     case start_GPS:
 
-#ifdef SKIP_GPS
-  loop_step = read_pressure;
-  break;
-#endif    
-
 #ifndef NoLED
       LED_blue(); // Set LED to Blue
 #endif
     
       // Power up the GPS and MPL3115A2
-      Serial.println("Powering up the GPS and MPL3115A2...");
+      Serial.println("[INFO : start_GPS] Powering up the GPS and MPL3115A2...");
       digitalWrite(GPS_EN, GPS_ON); // Enable the GPS and MPL3115A2
 
       delay(2000); // Allow time for both to start
@@ -761,7 +776,7 @@ void loop()
       // If voltage is low, go to sleep
       get_vbat();
       if (vbat < VBAT_LOW) {
-        Serial.print("***!!! LOW VOLTAGE (start_GPS) ");
+        Serial.print("[ERROR : start_GPS] ***!!! LOW VOLTAGE (start_GPS) ");
         Serial.print(vbat,2);
         Serial.println("V !!!***");
         loop_step = zzz;
@@ -779,7 +794,7 @@ void loop()
       delay(1000); // Allow time for the port to open
 
       // Configure GPS
-      Serial.println("Configuring GPS...");
+      Serial.println("[INFO : read_GPS] Configuring GPS...");
 
       // Disable all messages except GGA and RMC
       ssGPS.println("$PUBX,40,GLL,0,0,0,0*5C"); // Disable GLL
@@ -811,7 +826,7 @@ void loop()
       while(ssGPS.available()){ssGPS.read();} // Flush RX buffer so we don't confuse TinyGPS with UBX acknowledgements
 
       // Reset TinyGPS and begin listening to the GPS
-      Serial.println("Beginning to listen for GPS traffic...");
+      Serial.println("[INFO : read_GPS] Beginning to listen for GPS traffic...");
       fixFound = false; // Reset fixFound
       charsSeen = false; // Reset charsSeen
       tinygps = TinyGPS();
@@ -840,6 +855,7 @@ void loop()
                        hdop != TinyGPS::GPS_INVALID_HDOP &&
                        year != 2000;
           }
+          if (EMULATE && charsSeen) {fixFound = true;}
         }
 
         // if we haven't seen any GPS data in 10 seconds, then stop waiting
@@ -866,19 +882,19 @@ void loop()
 
       }
 
-      Serial.println(charsSeen ? fixFound ? F("A GPS fix was found!") : F("No GPS fix was found.") : F("Wiring error: No GPS data seen."));
-      Serial.print("Latitude (degrees): "); Serial.println(latitude, 6);
-      Serial.print("Longitude (degrees): "); Serial.println(longitude, 6);
-      Serial.print("Altitude (m): "); Serial.println(altitude / 100); // Convert altitude from cm to m
+      Serial.println(charsSeen ? fixFound ? F("[INFO : read_GPS] A GPS fix was found!") : F("[ERROR : read_GPS] No GPS fix was found.") : F("[ERROR : read_GPS] Wiring error: No GPS data seen."));
+      Serial.print("[INFO : read_GPS] Latitude (degrees): "); Serial.println(latitude, 6);
+      Serial.print("[INFO : read_GPS] Longitude (degrees): "); Serial.println(longitude, 6);
+      Serial.print("[INFO : read_GPS] Altitude (m): "); Serial.println(altitude / 100); // Convert altitude from cm to m
 
       if (vbat < VBAT_LOW) {
-        Serial.print("***!!! LOW VOLTAGE (read_GPS) ");
+        Serial.print("[ERROR : read_GPS] ***!!! LOW VOLTAGE (read_GPS) ");
         Serial.print(vbat,2);
         Serial.println("V !!!***");
         loop_step = zzz;
       }
       else if (!charsSeen) {
-        Serial.println("***!!! No GPS data received !!!***");
+        Serial.println("[ERROR : read_GPS] ***!!! No GPS data received !!!***");
         loop_step = zzz;
       }
       else {
@@ -898,79 +914,75 @@ void loop()
         tempC = baro.getTemperature();
       }
       else {
-        Serial.println("***!!! Error initialising MPL3115A2 !!!***");
+        Serial.println("[ERROR : read_pressure] ***!!! Error initialising MPL3115A2 !!!***");
         pascals = 0.0;
         tempC = 0.0;
       }
 
-      Serial.print("Pressure (Pascals): "); Serial.println(pascals,0);
-      Serial.print("Temperature (C): "); Serial.println(tempC,1);
+      Serial.print("[INFO : read_pressure] Pressure (Pascals): "); Serial.println(pascals,0);
+      Serial.print("[INFO : read_pressure] Temperature (C): "); Serial.println(tempC,1);
 
        // Power down the GPS and MPL3115A2
-      Serial.println("Powering down the GPS and MPL3115A2...");
+      Serial.println("[INFO : read_pressure] Powering down the GPS and MPL3115A2...");
       digitalWrite(GPS_EN, GPS_OFF); // Disable the GPS and MPL3115A2
 
-      loop_step = read_iMET;
+      loop_step = start_iMET;
 
       break;
 
 
-    case read_iMET:
+    case read_DaisyChain:
+
+      // Start reading instrument #2
+
+      Serial.println("[INFO : read_DaisyChain] START Reading instrument #2 data");
+
+      ssDaisyChain.begin(9600);
+      ssDaisyChain.setTimeout(2000);
+      pinPeripheral(2, PIO_SERCOM);
+      pinPeripheral(5, PIO_SERCOM);
+      delay(1100);
+      if (ssDaisyChain.available() > 0) {
+        DaisyChain_Xdata = ssDaisyChain.readStringUntil('\n');        
+        Serial.print("[INFO : read_DaisyChain] RECEIVED from Ints2: "); Serial.println(DaisyChain_Xdata);
+      } else {
+        Serial.println("[ERROR : read_DaisyChain] Ints2 instrument NOT connected");
+      }
+
+      loop_step = read_DaisyChain;
+
+      break;
+
+
+    case start_iMET:
 
       // Start reading iMET radiosonde
 
-      Serial.println("START Reading iMET Radiosonde data");
+      Serial.println("[INFO : start_iMET] START Reading iMET Radiosonde data");
 
       ssiMET.begin(9600);
       delay(1100);      
       if (ssiMET.available() > 0) {
         iMET_Xdata = ssiMET.readStringUntil('\n');        
-        Serial.print("RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+        Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMET_Xdata);
       } else {
-        Serial.println("ERROR - iMET instrument NOT connected");
+        Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
       }
-
-      loop_step = read_inst2;
-
-      break;
-
-    case read_inst2:
-
-      // Start reading instrument #2
-
-      Serial.println("START Reading instrument #2 data");
-
-      ssInst2.begin(9600);
-      ssInst2.setTimeout(2000);
-      pinPeripheral(2, PIO_SERCOM);
-      pinPeripheral(5, PIO_SERCOM);
-      delay(1100);
-      if (ssInst2.available() > 0) {
-        Inst2_Xdata = ssInst2.readStringUntil('\n');        
-        Serial.print("RECEIVED from Ints2: "); Serial.println(Inst2_Xdata);
-      } else {
-        Serial.println("ERROR - Ints2 instrument NOT connected");
-      }
-
-
+     
       loop_step = start_LTC3225;
 
       break;
-    
-    case start_LTC3225:
 
-#ifdef SKIP_CHARGER
-  loop_step = start_9603;
-  break;
-#endif      
+   
+    case start_LTC3225:
 
 #ifndef NoLED
       LED_cyan(); // Set LED to Cyan
 #endif
 
       // Power up the LTC3225EDDB super capacitor charger
-      Serial.println("Powering up the LTC3225EDDB");
-      Serial.println("Waiting for PGOOD to go HIGH...");
+      Serial.println("[INFO : start_LTC3225] Powering up the LTC3225EDDB");
+      Serial.println("[INFO : start_LTC3225] Waiting for PGOOD to go HIGH...");
       digitalWrite(LTC3225shutdown, HIGH); // Enable the LTC3225EDDB supercapacitor charger
       delay(1000); // Let PGOOD stabilise
       
@@ -979,13 +991,14 @@ void loop()
       for (tnow = millis(); !PGOOD && millis() - tnow < 10UL * 60UL * 1000UL;)
       {
 #ifndef NoLED
-      // 'Flash' the LED
-      if ((millis() / 1000) % 2 == 1) {
-        LED_dim_cyan();
-      }
-      else {
-        LED_cyan();
-      }
+        // 'Flash' the LED
+        if ((millis() / 1000) % 2 == 1) {
+          LED_dim_cyan();
+        }
+        else {
+          LED_cyan();
+               
+        }
 #endif
 
         // Check battery voltage now we are drawing current for the LTC3225
@@ -996,17 +1009,18 @@ void loop()
         }
 
         PGOOD = digitalRead(LTC3225PGOOD);
+        if (EMULATE) {PGOOD = 1;} 
       }
 
       // If voltage is low or supercapacitors did not charge then go to sleep
       if (vbat < VBAT_LOW) {
-        Serial.print("***!!! LOW VOLTAGE (start_LTC3225) ");
+        Serial.print("[ERROR : start_LTC3225] ***!!! LOW VOLTAGE (start_LTC3225) ");
         Serial.print(vbat,2);
         Serial.println("V !!!***");
         loop_step = zzz;
       }
       else if (PGOOD == LOW) {
-        Serial.println("***!!! LTC3225 !PGOOD (start_LTC3225) !!!***");
+        Serial.println("[ERROR : start_LTC3225] ***!!! LTC3225 !PGOOD (start_LTC3225) !!!***");
         loop_step = zzz;
       }
       // Otherwise start up the Iridium 9603
@@ -1018,11 +1032,12 @@ void loop()
 
     case wait_LTC3225:
       // Allow extra time for the super capacitors to charge
-      Serial.println("PGOOD has gone HIGH");
-      Serial.println("Allowing extra time to make sure capacitors are charged...");
+      Serial.println("[INFO : wait_LTC3225] PGOOD has gone HIGH");
+      Serial.println("[INFO : wait_LTC3225] Allowing extra time to make sure capacitors are charged...");
       
       // Allow 20s for extra charging
       PGOOD = digitalRead(LTC3225PGOOD);
+      if (EMULATE) {PGOOD = 1;} 
       for (tnow = millis(); PGOOD && millis() - tnow < 1UL * 20UL * 1000UL;)
       {
 #ifndef NoLED
@@ -1043,17 +1058,18 @@ void loop()
         }
 
         PGOOD = digitalRead(LTC3225PGOOD);
+        if (EMULATE) {PGOOD = 1;}
       }
 
       // If voltage is low or supercapacitors did not charge then go to sleep
       if (vbat < VBAT_LOW) {
-        Serial.print("***!!! LOW VOLTAGE (wait_LTC3225) ");
+        Serial.print("[ERROR : wait_LTC3225] ***!!! LOW VOLTAGE (wait_LTC3225) ");
         Serial.print(vbat,2);
         Serial.println("V !!!***");
         loop_step = zzz;
       }
       else if (PGOOD == LOW) {
-        Serial.println("***!!! LTC3225 !PGOOD (wait_LTC3225) !!!***");
+        Serial.println("[ERROR : wait_LTC3225] ***!!! LTC3225 !PGOOD (wait_LTC3225) !!!***");
         loop_step = zzz;
       }
       // Otherwise start up the Iridium 9603
@@ -1065,17 +1081,12 @@ void loop()
 
     case start_9603:
 
-#ifdef SKIP_9603
-  loop_step = zzz;
-  break;
-#endif  
-
 #ifndef NoLED
       LED_white(); // Set LED to White
 #endif
 
       // Start talking to the 9603 and power it up
-      Serial.println("Beginning to talk to the 9603...");
+      Serial.println("[INFO : start_9603] Beginning to talk to the 9603...");
 
       digitalWrite(Enable_9603N, HIGH); // Enable the 9603N
       delay(2000);
@@ -1083,7 +1094,9 @@ void loop()
       ssIridium.begin(19200);
       delay(1000);
 
-      if (isbd.begin() == ISBD_SUCCESS) // isbd.begin powers up the 9603
+      // EMAULATE ONLY
+      //if (isbd.begin() == ISBD_SUCCESS) // isbd.begin powers up the 9603
+      if (EMULATE)
       {
         char outBuffer[120]; // Always try to keep message short (maximum should be ~101 chars including RockBLOCK destination and source)
     
@@ -1152,7 +1165,7 @@ void loop()
           }
         }
 
-        Serial.print("Transmitting message '");
+        Serial.print("[INFO : start_9603N] Transmitting message (size = "); Serial.print(strlen(outBuffer)); Serial.print(" bytes) '");
         Serial.print(outBuffer);
         Serial.println("'");
         uint8_t mt_buffer[100]; // Buffer to store Mobile Terminated SBD message
@@ -1409,13 +1422,13 @@ void loop()
 #endif
 
       // Get ready for sleep
-      Serial.println("Putting 9603N and GNSS to sleep...");
+      Serial.println("[INFO : zzz] Putting 9603N and GNSS to sleep...");
       isbd.sleep(); // Put 9603 to sleep
       delay(1000);
-      ssIridium.end(); // Close GPS, Iridium, iMET and Inst2  serial ports
+      ssIridium.end(); // Close GPS, Iridium, iMET and DaisyChain  serial ports
       ssGPS.end();
       ssiMET.end();
-      ssInst2.end();
+      ssDaisyChain.end();
       delay(1000); // Wait for serial ports to clear
   
       // Disable: GPS; pressure sensor; 9603N; and Iridium supercapacitor charger
@@ -1426,17 +1439,17 @@ void loop()
 
       // Now that power draw has been minimised, reset/set/pulse the relay
       if (reset_relay_flag == true) {
-        Serial.println("Resetting relay...");
+        Serial.println("[INFO : zzz] Resetting relay...");
         reset_relay();
         reset_relay_flag = false;
       }
       if (set_relay_flag == true) {
-        Serial.println("Setting relay...");
+        Serial.println("[INFO : zzz] Setting relay...");
         set_relay();
         set_relay_flag = false;
       }
       if (pulse_relay_flag == true) {
-        Serial.println("Pulsing relay...");
+        Serial.println("[INFO : zzz] Pulsing relay...");
         set_relay();
         delay(relay_pulse_duration * 1000);
         reset_relay();
@@ -1447,14 +1460,14 @@ void loop()
       LED_off();
   
       // Close and detach the serial console (as per CaveMoa's SimpleSleepUSB)
-      Serial.println("Going to sleep until next alarm time...");
+      Serial.println("[INFO : zzz] Going to sleep until next alarm time...");
       delay(1000); // Wait for serial port to clear
 //      Serial.end(); // Close the serial console
 //      USBDevice.detach(); // Safely detach the USB prior to sleeping
     
       // Sleep until next alarm match
       //rtc.standbyMode();  // USE THIS for Operational code
-      delay(6000);   // delay only for testing REMOVE
+      delay(BEACON_INTERVAL*1000);   // delay only for testing REMOVE
   
       // Wake up!
       loop_step = wake;

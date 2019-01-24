@@ -1,3 +1,13 @@
+// Serial2 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
+#define PIN_SERIAL2_RX       (34ul)               // Pin description number for PIO_SERCOM on D12 (Physical Pin 28)
+#define PIN_SERIAL2_TX       (36ul)               // Pin description number for PIO_SERCOM on D10 (Physical Pin 27)
+#define PAD_SERIAL2_TX       (UART_TX_PAD_2)      // SERCOM1 pad 2 (SC1PAD2)
+#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_3)    // SERCOM1 pad 3 (SC1PAD3)
+// Instantiate the Serial2 class
+Uart Serial2(&sercom1, PIN_SERIAL2_RX, PIN_SERIAL2_TX, PAD_SERIAL2_RX, PAD_SERIAL2_TX);
+HardwareSerial &ssFakeGPS(Serial2);
+
+
 // SERCOM4 -> Serial3 -> iMET
 // Serial3 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
 // iMET Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
@@ -11,6 +21,12 @@ Uart Serial3(&sercom4, PIN_SERIAL3_RX, PIN_SERIAL3_TX, PAD_SERIAL3_RX, PAD_SERIA
 HardwareSerial &ssInst2(Serial3);
 
 
+// Interrupt handler for SERCOM1 (essential for Serial2 comms)
+void SERCOM1_Handler()
+{
+  Serial2.IrqHandler();
+}
+
 // Interrupt handler for SERCOM4 (essential for Serial3 comms)
 void SERCOM4_Handler()
 {
@@ -22,6 +38,7 @@ void setup() {
   Serial.begin(115200);
   Serial1.begin(9600);
   ssInst2.begin(9600);
+  ssFakeGPS.begin(9600);
 
 }
 
@@ -38,15 +55,19 @@ void loop() {
 
   starttime = millis();
   
-  sprintf(outBuffer, "xdata=0101%013d\n", count);
+  sprintf(outBuffer, "xdata=0101%013d\r\n", count);
   Serial.print("SENDING to iMET: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 
   
-  sprintf(outBuffer1, "xdata=0202%013d\n", count);
+  sprintf(outBuffer1, "xdata=0202%013d\r\n", count);
   Serial.print("SENDING to Inst2: "); Serial.println(outBuffer1);
   ssInst2.write(outBuffer1);
 
+
+  char GGAString[120] = "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n";
+  Serial.print("SENDING to FakeGPS: "); Serial.println(GGAString);
+  ssFakeGPS.write(GGAString);
   
   count++;
 
