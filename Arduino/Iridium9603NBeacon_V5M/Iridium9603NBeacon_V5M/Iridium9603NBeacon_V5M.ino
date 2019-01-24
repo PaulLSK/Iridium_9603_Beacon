@@ -854,8 +854,8 @@ void loop()
                        course != TinyGPS::GPS_INVALID_ANGLE &&
                        hdop != TinyGPS::GPS_INVALID_HDOP &&
                        year != 2000;
-          }
-          if (EMULATE && charsSeen) {fixFound = true;}
+            if (EMULATE && charsSeen) {fixFound = true;}
+          }          
         }
 
         // if we haven't seen any GPS data in 10 seconds, then stop waiting
@@ -926,14 +926,14 @@ void loop()
       Serial.println("[INFO : read_pressure] Powering down the GPS and MPL3115A2...");
       digitalWrite(GPS_EN, GPS_OFF); // Disable the GPS and MPL3115A2
 
-      loop_step = start_iMET;
+      loop_step = read_DaisyChain;
 
       break;
 
 
     case read_DaisyChain:
 
-      // Start reading instrument #2
+      // Start reading instrument daisy chain
 
       Serial.println("[INFO : read_DaisyChain] START Reading instrument #2 data");
 
@@ -944,12 +944,12 @@ void loop()
       delay(1100);
       if (ssDaisyChain.available() > 0) {
         DaisyChain_Xdata = ssDaisyChain.readStringUntil('\n');        
-        Serial.print("[INFO : read_DaisyChain] RECEIVED from Ints2: "); Serial.println(DaisyChain_Xdata);
+        Serial.print("[INFO : read_DaisyChain] RECEIVED from daisy chain: "); Serial.println(DaisyChain_Xdata);
       } else {
-        Serial.println("[ERROR : read_DaisyChain] Ints2 instrument NOT connected");
+        Serial.println("[ERROR : read_DaisyChain] NO instruments connected");
       }
 
-      loop_step = read_DaisyChain;
+      loop_step = start_iMET;
 
       break;
 
