@@ -11985,8 +11985,6 @@ BF959 corrected 2008.03.06&lt;br&gt;</description>
 <pad name="P$1" x="0" y="0" drill="1.8542"/>
 <pad name="P$2" x="0" y="3.81" drill="1.8542"/>
 <pad name="P$3" x="0" y="7.62" drill="1.8542"/>
-<hole x="-2.54" y="-12.7" drill="1.8542"/>
-<hole x="2.54" y="-12.7" drill="1.8542"/>
 <wire x1="-3.81" y1="-13.97" x2="-3.81" y2="10.16" width="0.127" layer="21"/>
 <wire x1="-3.81" y1="10.16" x2="3.81" y2="10.16" width="0.127" layer="21"/>
 <wire x1="3.81" y1="10.16" x2="3.81" y2="-13.97" width="0.127" layer="21"/>
@@ -12220,6 +12218,7 @@ Locking Lever</description>
 <part name="U$54" library="microbuilder" deviceset="GND" device=""/>
 <part name="GND6" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:6240654/1"/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="D5" library="microbuilder" deviceset="DIODE-SCHOTTKY" device="SOD-123" value="MBR120"/>
 </parts>
 <sheets>
 <sheet>
@@ -12454,9 +12453,6 @@ power switch</text>
 <pinref part="U$37" gate="G$1" pin="VBAT"/>
 <wire x1="218.44" y1="111.76" x2="218.44" y2="114.3" width="0.1524" layer="91"/>
 <pinref part="BAT1" gate="G$1" pin="+"/>
-<pinref part="BAT4" gate="G$1" pin="+"/>
-<wire x1="218.44" y1="111.76" x2="236.22" y2="111.76" width="0.1524" layer="91"/>
-<junction x="218.44" y="111.76"/>
 </segment>
 </net>
 <net name="N$8" class="0">
@@ -12536,6 +12532,13 @@ power switch</text>
 <pinref part="BAT5" gate="G$1" pin="-"/>
 <pinref part="BAT6" gate="G$1" pin="+"/>
 <wire x1="236.22" y1="88.9" x2="236.22" y2="86.36" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="VBAT1" class="0">
+<segment>
+<pinref part="BAT4" gate="G$1" pin="+"/>
+<wire x1="236.22" y1="111.76" x2="236.22" y2="114.3" width="0.1524" layer="91"/>
+<label x="236.22" y="114.3" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
@@ -12847,6 +12850,10 @@ power switch</text>
 <instance part="GND14" gate="1" x="149.86" y="91.44" smashed="yes">
 <attribute name="VALUE" x="147.32" y="88.9" size="1.778" layer="96"/>
 </instance>
+<instance part="D5" gate="G$1" x="53.34" y="160.02" smashed="yes" rot="R270">
+<attribute name="NAME" x="55.88" y="160.02" size="1.27" layer="95" rot="R270" align="center"/>
+<attribute name="VALUE" x="50.84" y="160.02" size="1.27" layer="96" rot="R270" align="center"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -13131,7 +13138,8 @@ power switch</text>
 <junction x="45.72" y="152.4"/>
 <pinref part="C6" gate="G$1" pin="1"/>
 <wire x1="53.34" y1="152.4" x2="50.8" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="50.8" y1="152.4" x2="45.72" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="152.4" x2="48.26" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="152.4" x2="45.72" y2="152.4" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="152.4" x2="45.72" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="157.48" x2="45.72" y2="152.4" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="IN"/>
@@ -13150,6 +13158,10 @@ power switch</text>
 <wire x1="30.48" y1="162.56" x2="12.7" y2="162.56" width="0.1524" layer="91"/>
 <wire x1="12.7" y1="162.56" x2="12.7" y2="160.02" width="0.1524" layer="91"/>
 <pinref part="R3" gate="G$1" pin="2"/>
+<pinref part="D5" gate="G$1" pin="C"/>
+<wire x1="53.34" y1="157.48" x2="48.26" y2="157.48" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="157.48" x2="48.26" y2="152.4" width="0.1524" layer="91"/>
+<junction x="48.26" y="152.4"/>
 </segment>
 <segment>
 <pinref part="VBUS" gate="G$1" pin="1"/>
@@ -13452,6 +13464,13 @@ power switch</text>
 <pinref part="D4" gate="G$1" pin="A"/>
 <wire x1="241.3" y1="144.78" x2="243.84" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="243.84" y1="144.78" x2="243.84" y2="147.32" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="VBAT1" class="0">
+<segment>
+<pinref part="D5" gate="G$1" pin="A"/>
+<wire x1="53.34" y1="162.56" x2="53.34" y2="165.1" width="0.1524" layer="91"/>
+<label x="53.34" y="165.1" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

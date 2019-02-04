@@ -935,7 +935,7 @@ void loop()
 
       // Start reading instrument daisy chain
 
-      Serial.println("[INFO : read_DaisyChain] START Reading instrument #2 data");
+      Serial.println("[INFO : read_DaisyChain] START reading daisy chain instrument data");
 
       ssDaisyChain.begin(9600);
       ssDaisyChain.setTimeout(2000);
@@ -961,6 +961,7 @@ void loop()
       Serial.println("[INFO : start_iMET] START Reading iMET Radiosonde data");
 
       ssiMET.begin(9600);
+      ssiMET.setTimeout(2000);
       delay(1100);      
       if (ssiMET.available() > 0) {
         iMET_Xdata = ssiMET.readStringUntil('\n');        
@@ -968,6 +969,10 @@ void loop()
       } else {
         Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
       }
+
+      // Send daisy chain XData to iMET
+      Serial.print("[INFO : start_iMET] SENDING to iMET: "); Serial.println(DaisyChain_Xdata.c_str());
+      ssiMET.write(DaisyChain_Xdata.c_str());
      
       loop_step = start_LTC3225;
 
@@ -1130,6 +1135,10 @@ void loop()
           str.print(",");
           str.print(vbat, 2);
           str.print(",");
+          str.print(iMET_Xdata.substring(6));
+          str.print(",");
+          str.print(DaisyChain_Xdata.substring(6));
+          str.print(",");
           str.print(float(iterationCounter), 0);
           if (RBDESTINATION > 0) { // Append source RockBLOCK serial number (as text) to the end of the message
             char sourceBuffer[12];
@@ -1155,6 +1164,10 @@ void loop()
           str.print(tempC, 1);
           str.print(",");
           str.print(vbat, 2);
+          str.print(",");
+          str.print(iMET_Xdata.substring(6));
+          str.print(",");
+          str.print(DaisyChain_Xdata.substring(6));
           str.print(",");
           str.print(float(iterationCounter), 0);
           if (RBDESTINATION > 0) { // Append source RockBLOCK serial number (as text) to the end of the message

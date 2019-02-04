@@ -52,23 +52,53 @@ void loop() {
   char outBuffer[120];
   char outBuffer1[120];
   unsigned long starttime;
-
-  starttime = millis();
+  String iMET_Xdata = "";
+  //char iMET_Xdata[120] = "";
+  //int char_loc = 0;
+  //bool datafound = false;
   
+  starttime = millis();
+
+/*
+  while (Serial1.available() > 0) {
+    iMET_Xdata[char_loc] = Serial1.read();
+    char_loc++;
+    datafound = true;
+  }
+
+  if (datafound) {
+    Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+    memset(iMET_Xdata, 0, sizeof(iMET_Xdata));
+    datafound = false;
+  } else {
+    Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
+  }
+*/
+
+  if (Serial1.available() > 0) {
+    iMET_Xdata = Serial1.readStringUntil('\n');
+    Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+  } else {
+    Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
+  }  
+
+
+
   sprintf(outBuffer, "xdata=0101%013d\r\n", count);
-  Serial.print("SENDING to iMET: "); Serial.println(outBuffer);
+  //Serial.print("SENDING to iMET: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 
   
   sprintf(outBuffer1, "xdata=0202%013d\r\n", count);
-  Serial.print("SENDING to Inst2: "); Serial.println(outBuffer1);
+  //Serial.print("SENDING to Inst2: "); Serial.println(outBuffer1);
   ssInst2.write(outBuffer1);
 
 
   char GGAString[120] = "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n";
-  Serial.print("SENDING to FakeGPS: "); Serial.println(GGAString);
+  //Serial.print("SENDING to FakeGPS: "); Serial.println(GGAString);
   ssFakeGPS.write(GGAString);
-  
+
+   
   count++;
 
   delay(1000);
