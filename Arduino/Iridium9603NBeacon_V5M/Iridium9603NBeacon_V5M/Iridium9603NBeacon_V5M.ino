@@ -6,7 +6,7 @@ int VERBOSE = 1; // 0 = OFF, 1 = ON
 
 // !!!!!!!!!!!  MAKE SURE LOCALTEST and EMULATE ARE 0 FOR OPERATIONAL CODE !!!!!!!!!!!
 int LOCALTEST = 1; //0 = OFF, 1 = ON (used for serial port functionality when you want to keep the serial monitor console open)
-int EMULATE = 1; //0 = OFF, 1 = ON (used when not testing on an actual Beacon V5M board, i.e. Feather M0, Sparkfun ATSAMD21G)
+int EMULATE = 0; //0 = OFF, 1 = ON (used when not testing on an actual Beacon V5M board, i.e. Feather M0, Sparkfun ATSAMD21G)
 
 
 // This version provides support for the iMET Radiosonde
@@ -161,7 +161,7 @@ RTCZero rtc; // Create an rtc object
 // capacitor charge time; gnss fix time; Iridium timeout; etc.
 // The default value will be overwritten with the one stored in Flash - if one exists
 // The value can be changed via a Mobile Terminated message
-int BEACON_INTERVAL = 12;
+int BEACON_INTERVAL = 60;
 
 // Flash Storage
 #include <FlashStorage.h>
@@ -299,7 +299,7 @@ long iterationCounter = 0; // Increment each time a transmission is attempted
 static const int ledPin = 13; // WB2812B + Red LED on pin D13
 
 //#define NoLED // Uncomment this line to disable the LED
-//#define swap_red_green // Uncomment this line if your WB2812B has red and green reversed
+#define swap_red_green // Uncomment this line if your WB2812B has red and green reversed
 #ifdef swap_red_green
   Adafruit_NeoPixel pixels = Adafruit_NeoPixel(1, ledPin, NEO_GRB + NEO_KHZ800); // GRB WB2812B
 #else
@@ -833,6 +833,7 @@ void loop()
       
       // Look for GPS signal for up to 5 minutes
       for (tnow = millis(); !fixFound && millis() - tnow < 5UL * 60UL * 1000UL;)
+      //for (tnow = millis(); !fixFound && millis() - tnow < 20UL * 60UL * 1000UL;)  // !!!!  Change this !!!!!
       {
         if (ssGPS.available())
         {
@@ -846,6 +847,7 @@ void loop()
             satellites = tinygps.satellites(); // Get number of satellites
             course = tinygps.course(); // Get course over ground
             hdop = tinygps.hdop(); // Get horizontal dilution of precision
+            Serial.print("[DEBUG : read_GPS] ssGPS.available: "); Serial.print( altitude ); Serial.print(" "); Serial.print(speed); Serial.print(" "); Serial.print(satellites); Serial.print(" "); Serial.print(course); Serial.print(" "); Serial.println(hdop);
             fixFound = locationFix != TinyGPS::GPS_INVALID_FIX_TIME && 
                        dateFix != TinyGPS::GPS_INVALID_FIX_TIME && 
                        altitude != TinyGPS::GPS_INVALID_ALTITUDE &&
@@ -1098,11 +1100,9 @@ void loop()
 
       ssIridium.begin(19200);
       delay(1000);
-
-      // EMAULATE ONLY
-      //if (isbd.begin() == ISBD_SUCCESS) // isbd.begin powers up the 9603
-      if (EMULATE)
-      {
+      
+      if (isbd.begin() == ISBD_SUCCESS) // isbd.begin powers up the 9603
+       {
         char outBuffer[120]; // Always try to keep message short (maximum should be ~101 chars including RockBLOCK destination and source)
     
         if (fixFound)
