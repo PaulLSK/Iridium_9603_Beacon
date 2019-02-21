@@ -187,9 +187,9 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 // Serial Port Definisions
 // SERCOM0 -> Serial1 -> GPS
 // SERCOM1 -> Serial2 -> Iridium
-// SERCOM2 -> Serial4 -> DaisyChain
+// SERCOM2 -> Serial4 -> DaisyChain [Enclosure Label SERIAL#1]
 // SERCOM3 -> I2C -> PTU
-// SERCOM4 -> Serial3 -> iMET
+// SERCOM4 -> Serial3 -> iMET [Enclosure Label SERIAL#2]
 // SERCOM5 -> Serial -> USBSerial
 
 // SERCOM1 -> Serial2 -> Iridium
@@ -204,8 +204,8 @@ HardwareSerial &ssIridium(Serial2);
 
 // SERCOM4 -> Serial3 -> iMET
 // Serial3 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
-// iMET Tx (input) is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
-// iMET Rx (output) is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
+// iMET Tx  is connected to MOSI (Digital Pin 23, Port B Pin 10, SERCOM4 Pad 2, Serial3 Tx)
+// iMET Rx  is connected to SCK (Digital Pin 24, Port B Pin 11, SERCOM4 Pad 3, Serial3 Rx)
 #define PIN_SERIAL3_RX       (24ul)               // Pin description number for PIO_SERCOM on D24
 #define PIN_SERIAL3_TX       (23ul)               // Pin description number for PIO_SERCOM on D23
 #define PAD_SERIAL3_TX       (UART_TX_PAD_2)      // SERCOM4 Pad 2 (SC4PAD2)
@@ -216,8 +216,8 @@ HardwareSerial &ssiMET(Serial3);
 
 // SERCOM2 -> Serial4 -> DaisyChain
 // Serial4 pin and pad definitions (in Arduino files Variant.h & Variant.cpp)
-// instrument Tx (input) is connected to  (Digital Pin 2, Port A Pin 14, SERCOM1 Pad 2, Serial4 Tx, Physical Pin 23)
-// instrument Rx (output) is connected to (Digital Pin 5, Port A Pin 15, SERCOM1 Pad 3, Serial4 Rx, Physical Pin 24)
+// instrument Tx  is connected to  (Digital Pin 2, Port A Pin 14, SERCOM1 Pad 2, Serial4 Tx, Physical Pin 23)
+// instrument Rx  is connected to (Digital Pin 5, Port A Pin 15, SERCOM1 Pad 3, Serial4 Rx, Physical Pin 24)
 #define PIN_SERIAL4_RX       (5ul)               // Pin description number for PIO_SERCOM on D5
 #define PIN_SERIAL4_TX       (2ul)               // Pin description number for PIO_SERCOM on D2
 #define PAD_SERIAL4_TX       (UART_TX_PAD_2)      // SERCOM2 Pad 2 (SC2PAD2)
@@ -360,6 +360,9 @@ String iMET_Xdata = "";
 int ssiMET_AvailableBytes = 0;
 String DaisyChain_Xdata = "";
 int ssDaisyChain_AvailableBytes = 0;
+
+char DaisyChainBuffer[65];
+char iMETBuffer[15];
 
 // Storage for the average voltage during Iridium callbacks
 const int numReadings = 25;   // number of samples
@@ -832,8 +835,8 @@ void loop()
       tinygps = TinyGPS();
       
       // Look for GPS signal for up to 5 minutes
-      for (tnow = millis(); !fixFound && millis() - tnow < 5UL * 60UL * 1000UL;)
-      //for (tnow = millis(); !fixFound && millis() - tnow < 20UL * 60UL * 1000UL;)  // !!!!  Change this !!!!!
+      //for (tnow = millis(); !fixFound && millis() - tnow < 5UL * 60UL * 1000UL;)
+      for (tnow = millis(); !fixFound && millis() - tnow < 1UL * 6UL * 1000UL;)  // !!!!  Change this !!!!!
       {
         if (ssGPS.available())
         {
@@ -945,8 +948,10 @@ void loop()
       pinPeripheral(5, PIO_SERCOM);
       delay(1100);
       if (ssDaisyChain.available() > 0) {
-        DaisyChain_Xdata = ssDaisyChain.readStringUntil('\n');        
-        Serial.print("[INFO : read_DaisyChain] RECEIVED from daisy chain: "); Serial.println(DaisyChain_Xdata);
+        //DaisyChain_Xdata = ssDaisyChain.readString();        
+        ssDaisyChain.readBytesUntil('\0',DaisyChainBuffer, 63);
+        //Serial.print("[INFO : read_DaisyChain] RECEIVED from daisy chain: "); Serial.println(DaisyChain_Xdata);
+        Serial.print("[INFO : read_DaisyChain] RECEIVED from daisy chain: "); Serial.println(DaisyChainBuffer);
       } else {
         Serial.println("[ERROR : read_DaisyChain] NO instruments connected");
       }
@@ -966,15 +971,20 @@ void loop()
       ssiMET.setTimeout(2000);
       delay(1100);      
       if (ssiMET.available() > 0) {
-        iMET_Xdata = ssiMET.readStringUntil('\n');        
-        Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+        //iMET_Xdata = ssiMET.readString();        
+        ssiMET.readBytesUntil('\0', iMETBuffer, 14);
+        //Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMET_Xdata);
+        Serial.print("[INFO : start_iMET] RECEIVED from iMET: "); Serial.println(iMETBuffer);
       } else {
         Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
       }
 
       // Send daisy chain XData to iMET
-      Serial.print("[INFO : start_iMET] SENDING to iMET: "); Serial.println(DaisyChain_Xdata.c_str());
-      ssiMET.write(DaisyChain_Xdata.c_str());
+      //Serial.print("[INFO : start_iMET] SENDING to iMET: "); Serial.println(DaisyChain_Xdata.c_str());
+      //ssiMET.write(DaisyChain_Xdata.c_str());
+      Serial.print("[INFO : start_iMET] SENDING to iMET: "); Serial.println(DaisyChainBuffer);
+      ssiMET.write(DaisyChainBuffer);
+     
      
       loop_step = start_LTC3225;
 

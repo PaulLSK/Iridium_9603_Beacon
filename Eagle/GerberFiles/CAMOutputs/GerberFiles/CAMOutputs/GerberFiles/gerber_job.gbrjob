@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2019-02-19T19:45:49Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.2.2"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.671119,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "Iridium_9603_Beacon_V5M"
+        },
+        "Owner": "Paul Loewen <prl242@gmail.com>",
+        "Size": {
+            "X": 78,
+            "Y": 121
+        }
+    }
+}

@@ -72,7 +72,7 @@ void loop() {
     Serial.println("[ERROR : start_iMET] iMET instrument NOT connected");
   }
 */
-
+/*
   if (Serial1.available() > 0) {
     BEACON_Xdata = Serial1.readStringUntil('\n');
     Serial.print("[INFO : start_BEACON_Read] RECEIVED from BEACON: "); Serial.println(BEACON_Xdata);
@@ -80,17 +80,19 @@ void loop() {
     Serial.println("[ERROR : start_BEACON_Read] BEACON instrument NOT connected");
   }  
 
+*/
 
-
-  sprintf(outBuffer, "xdata=0101%013d\r\n", count);
+  sprintf(outBuffer, "xdata=0101%013d", count);
   Serial.print("SENDING to BEACON on SERIAL1: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 
+/*
   
   sprintf(outBuffer1, "xdata=0202%013d\r\n", count);
   Serial.print("SENDING to BEACON on SERIAL2: "); Serial.println(outBuffer1);
   ssSerial2.write(outBuffer1);
-  
+*/
+
   count++;
 
   delay(1000);
