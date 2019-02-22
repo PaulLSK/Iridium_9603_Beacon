@@ -34,6 +34,18 @@ void SERCOM4_Handler()
 }
 */
 
+
+/* CNC variables in XDATA string */
+int16_t CNC_300 = 111;    //OPC 300nm channel counts aka CN counts
+int16_t CNC_500 = 222;    //OPC 500nm channel counts
+int16_t CNC_700 = 333;    //OPC 700nm channel counts
+int8_t Pump1_PWM = 77;  //Pump1 PWM drive percent (0-100)
+int8_t Pump2_PWM = 88;  //Pump2 PWM drive percent (0-100)
+int16_t TempCN = 4444;   //Temperature of the staurator C 0.01 resolution
+int8_t TempIce = 55;  //Temperature of Ice Jacket C 1 resolution
+int8_t TempPCB = 66;  //Temperature of the control boars C 1 resolution
+
+
 void setup() {
   Serial.begin(115200);
   Serial1.begin(9600);
@@ -82,7 +94,8 @@ void loop() {
 
 */
 
-  sprintf(outBuffer, "xdata=0101%013d", count);
+  //sprintf(outBuffer, "xdata=4102%4hX%4hX%4hX%2hX%2hX%4hX%2hX%2hX\r", CNC_300, CNC_500, CNC_700, Pump1_PWM, Pump2_PWM, TempCN, TempIce, TempPCB);
+  sprintf(outBuffer, "xdata=41020F1C00A600262A0E9F0BBD7880\r");
   Serial.print("SENDING to BEACON on SERIAL1: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 

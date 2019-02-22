@@ -369,7 +369,7 @@ void reset_relay()
 void sendUBX(const uint8_t *message, const int len) {
   int csum1 = 0; // Checksum bytes
   int csum2 = 0;
-  for (int i=0; i<len; i++) { // For each byte in the message
+  for (int i = 0; i < len; i++) { // For each byte in the message
     GPS_SERIAL.write(message[i]); // Write the byte
     if (i >= 2) { // Don't include the sync chars in the checksum
       csum1 = csum1 + message[i]; // Update the checksum bytes
@@ -396,6 +396,9 @@ void sendUBX(const uint8_t *message, const int len) {
 bool newXData = false;
 bool newIMetData = false;
 bool newGPSData = false;
+
+/* Setup Flag */
+bool inSetup = true;
 
 /* CNC variables in XDATA string */
 int16_t CNC_300;    //OPC 300nm channel counts aka CN counts
@@ -424,7 +427,7 @@ float BeaconT = 23.2;
 
 float lat, lon, alt;
 
-IridiumSBD modem(IRIDIUM_SERIAL, IridiumSleepPin);
+IridiumSBD isbd(IRIDIUM_SERIAL, IridiumSleepPin);
 TinyGPSPlus gps;
 
 
@@ -461,8 +464,8 @@ void setup() {
   pinMode(GPS_EN, OUTPUT); // GPS & MPL3115A2 enable
   digitalWrite(GPS_EN, GPS_OFF); // Disable the GPS and MPL3115A2
 
-  pinMode(IridiumSleepPin, OUTPUT); // The call to IridiumSBD should have done this - but just in case
-  digitalWrite(IridiumSleepPin, LOW); // Disable the Iridium 9603
+  //pinMode(IridiumSleepPin, OUTPUT); // The call to IridiumSBD should have done this - but just in case
+  //digitalWrite(IridiumSleepPin, LOW); // Disable the Iridium 9603
   pinMode(ringIndicator, INPUT); // Define an input for the Iridium 9603 Ring Indicator signal
 
   pinMode(set_coil, INPUT_PULLUP); // Initialise relay set_coil pin
@@ -496,6 +499,7 @@ void setup() {
   ok = ok && start_LTC3225();    // Turn on the supercapacitor charger and wait for capacitors to be charged.
   ok = ok && start_Iridium();    // Power ON and check communication with Iridium 9603 modem
 
+
 #ifdef DEBUG
   DEBUG_SERIAL.println("[INFO : setup] Starting iMET and XDATA Serial Ports.");
 #endif
@@ -516,13 +520,31 @@ void setup() {
 }
 
 void loop() {
+
+#ifndef NoLED
+  LED_off(); // Turn LED off
+#endif
+
+  if (inSetup) {
+#ifdef DEBUG
+    DEBUG_SERIAL.println("[INFO : loop] Starting Main Loop.");
+#endif
+    inSetup = false;
+  }
+
   checkForSerial();
 
-  if (newXData)
+  if (newXData)  //this code must also be copied into the ISBDCallback function
   {
     parseXDATA();         //Parse the incoming string
     IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);  //Add the values to the string to send via Iridium
     XdataCnt++;            //Increment the counter
+    XDataInput = "";
+    DEBUG_SERIAL.println();
+    DEBUG_SERIAL.println(" ************************************************");
+    DEBUG_SERIAL.print("newXData : XDataInput = "); DEBUG_SERIAL.print(XDataInput); DEBUG_SERIAL.print(" XDataCnt = "); DEBUG_SERIAL.println(XdataCnt);
+    DEBUG_SERIAL.println(" ************************************************");
+    DEBUG_SERIAL.println();
   }
 
   checkForSerial();
@@ -536,10 +558,10 @@ void loop() {
     XdataCnt = 0;
     IridiumBufferIndex = 0;
     SendStartTime =  millis();
-    int err = modem.sendSBDBinary(SendBuffer, SendBufferIndex);
+    int err = isbd.sendSBDBinary(SendBuffer, SendBufferIndex);
     if (err != ISBD_SUCCESS)
     {
-      Serial.print("sendSBDBinary failed, moving on: error ");
+      Serial.print("[ERROR : loop : sendSBDBinary]  Failed to send SBD, moving on: error ");
       Serial.println(err);
     }
 
@@ -563,6 +585,7 @@ void checkForSerial(void)
 
   if (IMET_SERIAL.available()) {
     char IMET_Char = IMET_SERIAL.read();
+    //DEBUG_SERIAL.print("IMET_Char: ");DEBUG_SERIAL.println(IMET_Char);
     XDATA_SERIAL.write(IMET_Char); //Pass through any iMet chars to the XData instruments.
     if (IMET_Char == '\n')
     {
@@ -577,6 +600,7 @@ void checkForSerial(void)
 
   if (XDATA_SERIAL.available()) {
     char XDATA_Char = XDATA_SERIAL.read();
+    //DEBUG_SERIAL.print("XDATA_Char: ");DEBUG_SERIAL.println(XDATA_Char);
     IMET_SERIAL.write(XDATA_Char);  //Pass through any xdata chars to the iMet.
     if (XDATA_Char == '\r')
     {
@@ -634,21 +658,24 @@ void parseXDATA()
   if (XDataInput.startsWith("xdata=41")) //we have a CNC string
   {
     (XDataInput.substring(10)).toCharArray(XDATAArray, 128); //drop the first 10 chars ('xdata=4102') and process the rest
+    DEBUG_SERIAL.print("XDATAArray: "); DEBUG_SERIAL.println(XDATAArray);
     sscanf(XDATAArray, "%4hX %4hX %4hX %2hhX %2hhX %4hX %2hhX %2hhX", &CNC_300, &CNC_500, &CNC_700, &Pump1_PWM, &Pump2_PWM, &TempCN, &TempIce, &TempPCB);
   }
+ 
+    #ifdef DEBUG
+    DEBUG_SERIAL.print("CNC Variables: ");
+    DEBUG_SERIAL.print(CNC_300); DEBUG_SERIAL.print(' ');
+    DEBUG_SERIAL.print(CNC_500); DEBUG_SERIAL.print(' ');
+    DEBUG_SERIAL.print(CNC_700); DEBUG_SERIAL.print(' ');
+    DEBUG_SERIAL.print(Pump1_PWM); DEBUG_SERIAL.print(' ');
+    DEBUG_SERIAL.print(Pump2_PWM); DEBUG_SERIAL.print(' ');
+    DEBUG_SERIAL.print(float(TempCN) / 100.0); DEBUG_SERIAL.print(' '); // Convert this back to a float
+    DEBUG_SERIAL.print(float(TempIce) - 100.0); DEBUG_SERIAL.print(' '); // Convert this back to a float
+    DEBUG_SERIAL.print(float(TempPCB) - 100.0); DEBUG_SERIAL.println(); // Convert this back to a float
+    #endif
 
-#ifdef DEBUG
-  DEBUG_SERIAL.print("CNC Variables: ");
-  DEBUG_SERIAL.print(CNC_300); DEBUG_SERIAL.print(' ');
-  DEBUG_SERIAL.print(CNC_500); DEBUG_SERIAL.print(' ');
-  DEBUG_SERIAL.print(CNC_700); DEBUG_SERIAL.print(' ');
-  DEBUG_SERIAL.print(Pump1_PWM); DEBUG_SERIAL.print(' ');
-  DEBUG_SERIAL.print(Pump2_PWM); DEBUG_SERIAL.print(' ');
-  DEBUG_SERIAL.print(float(TempCN) / 100.0); DEBUG_SERIAL.print(' '); // Convert this back to a float
-  DEBUG_SERIAL.print(float(TempIce) - 100.0); DEBUG_SERIAL.print(' '); // Convert this back to a float
-  DEBUG_SERIAL.print(float(TempPCB) - 100.0); DEBUG_SERIAL.println(); // Convert this back to a float
-#endif
-
+  newXData = false;
+  memset(XDATAArray, 0, sizeof(XDATAArray));
 }
 
 /*
@@ -716,21 +743,27 @@ int addXDataToIridium(int start_index)
    new data and proces that data while we wait for the SBD to send. After 12 seconds
    it gives up, clears the output buffer and moves on to the next sample.
 */
+
 bool ISBDCallback()
 {
-  if ( millis() >  SendStartTime + SEND_TIMEOUT)
-    return false;
+  if (!inSetup) {
+    if ( millis() >  SendStartTime + SEND_TIMEOUT)
+      return false;
+/*
+    checkForSerial();
 
-  checkForSerial();
-
-  if (newXData)
-  {
-    parseXDATA();         //Parse the incoming string
-
-    IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);
-    XdataCnt++;            //Increment the counter
+    if (newXData)
+    {
+      parseXDATA();         //Parse the incoming string
+      IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);  //Add the values to the string to send via Iridium
+      XdataCnt++;            //Increment the counter
+      XDataInput = "";
+      DEBUG_SERIAL.println(" -------------------------------------------------");
+      DEBUG_SERIAL.print("INCALL BACK newXData : XDataInput = "); DEBUG_SERIAL.print(XDataInput); DEBUG_SERIAL.print(" XDataCnt = "); DEBUG_SERIAL.println(XdataCnt);
+      DEBUG_SERIAL.println(" -------------------------------------------------");
+    }
+*/
   }
-
   return true;
 }
 
@@ -750,6 +783,11 @@ void ISBDDiagsCallback(IridiumSBD *device, char c)
   DEBUG_SERIAL.write(c);
 }
 #endif
+
+/*
+   Powers ON the GPS Reciever and initiates the serial communication.
+   Also configures the GPS Reciever.
+*/
 
 
 bool start_GPS() {
@@ -884,6 +922,11 @@ bool start_LTC3225()
   return ok;
 }
 
+
+/*
+   Powers ON the Iridium 9603N modem and initiates serial communication.
+*/
+
 bool start_Iridium() {
 
   bool ok = true;
@@ -903,10 +946,10 @@ bool start_Iridium() {
   IRIDIUM_SERIAL.begin(19200);
   delay(1000);
 
-  modem.setPowerProfile(IridiumSBD::DEFAULT_POWER_PROFILE);
+  isbd.setPowerProfile(IridiumSBD::DEFAULT_POWER_PROFILE);
 
   // Setup the Iridium modem
-  if (modem.begin() != ISBD_SUCCESS)
+  if (isbd.begin() != ISBD_SUCCESS)
   {
     Serial.println("[ERROR : start_Iridium] Could not begin modem operations.");
     ok = false;

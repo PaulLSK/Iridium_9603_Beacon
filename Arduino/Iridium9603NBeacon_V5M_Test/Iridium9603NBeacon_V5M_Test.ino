@@ -447,7 +447,7 @@ void loop()
 
   Serial.println();
 
-  for (tnow = millis(); millis() - tnow < 10UL * 60UL * 1000UL;) {
+  for (tnow = millis(); millis() - tnow < 1UL * 60UL * 1000UL;) {
     while(ssGPS.available()){Serial.write(ssGPS.read());}
   }
 
@@ -468,7 +468,7 @@ void loop()
   Serial.println("Waiting for up to 60 seconds for PGOOD to go high...");
 
   PGOOD = digitalRead(LTC3225PGOOD);
-  for (tnow = millis(); !PGOOD && millis() - tnow < 1UL * 60UL * 1000UL;) {
+  for (tnow = millis(); !PGOOD && millis() - tnow < 1UL * 6UL * 1000UL;) {
     PGOOD = digitalRead(LTC3225PGOOD);
   }
 
