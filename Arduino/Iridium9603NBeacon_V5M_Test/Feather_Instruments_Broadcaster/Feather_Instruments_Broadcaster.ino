@@ -95,7 +95,7 @@ void loop() {
 */
 
   //sprintf(outBuffer, "xdata=4102%4hX%4hX%4hX%2hX%2hX%4hX%2hX%2hX\r", CNC_300, CNC_500, CNC_700, Pump1_PWM, Pump2_PWM, TempCN, TempIce, TempPCB);
-  sprintf(outBuffer, "xdata=41020F1C00A600262A0E9F0BBD7880\r");
+  sprintf(outBuffer, "xdata=4102AF1C00A600262A0E9F0BBD7880\r");
   Serial.print("SENDING to BEACON on SERIAL1: "); Serial.println(outBuffer);
   Serial1.write(outBuffer);
 
