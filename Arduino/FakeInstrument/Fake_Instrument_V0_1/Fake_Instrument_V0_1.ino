@@ -63,9 +63,10 @@ void WriteToSD(String toWrite)
 
 int ReadFromSDandSend(void)
 {
+  String list;
   if (SendFile.available())
  {
-    String list = SendFile.readStringUntil('\n');
+    list = SendFile.readStringUntil('\n');
     DEBUG_SERIAL.print("Sending to Instrument Serial: ");
     DEBUG_SERIAL.print(list);
     recNum++; // Count the record
@@ -74,10 +75,12 @@ int ReadFromSDandSend(void)
  }
   else{
       DEBUG_SERIAL.println("Nothing to send");
+      DEBUG_SERIAL.println(list.length());
+      SendFile.close();
+      OpenFile("OUTGOING.txt");
       return 0;
   }
 
- 
 }
 
 
@@ -111,5 +114,3 @@ void checkForSerial()
 
 
 }
-
-

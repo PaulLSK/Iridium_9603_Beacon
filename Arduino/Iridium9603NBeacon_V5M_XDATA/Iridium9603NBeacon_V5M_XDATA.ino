@@ -556,6 +556,7 @@ void setup() {
 }
 
 void loop() {
+  bool ok = true;
 
 #ifndef NoLED
   LED_off(); // Turn LED off
@@ -579,11 +580,16 @@ void loop() {
     DEBUG_SERIAL.print("newXData : XDataInput = "); DEBUG_SERIAL.print(XDataInput); DEBUG_SERIAL.print(" XDataCnt = "); DEBUG_SERIAL.println(XdataCnt);
     DEBUG_SERIAL.println(" ************************************************");
     DEBUG_SERIAL.println();
+    DEBUG_SERIAL.print("IridiumBufferIndex: ");  DEBUG_SERIAL.println(IridiumBufferIndex);
 #endif
 
-    parseXDATA();         //Parse the incoming string
-    IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);  //Add the values to the string to send via Iridium
-    XdataCnt++;            //Increment the counter
+    ok = parseXDATA();         //Parse the incoming string.  Also does a simple check to see if header of string is valid.
+
+    if (ok) {
+      IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);  //Add the values to the string to send via Iridium
+      XdataCnt++;            //Increment the counter
+    }
+
     XDataInput = "";
   }
 
@@ -604,8 +610,21 @@ void loop() {
     IridiumBuffer[IridiumBufferIndex + 2] = uint8_t(BeaconBatteryV * 10);
     SendBufferIndex = IridiumBufferIndex + 2;
     memcpy(SendBuffer, IridiumBuffer, SendBufferIndex); //copy the buffer/indx to a new one so we can start refilling the old one
+
+#ifdef PRLTEST
+    DEBUG_SERIAL.println();
+    DEBUG_SERIAL.print("SendBufferIndex: "); DEBUG_SERIAL.println(SendBufferIndex);
+    DEBUG_SERIAL.print("SendBuffer: "); DEBUG_SERIAL.write(SendBuffer, SendBufferIndex);
+    DEBUG_SERIAL.println("SendBuffer in HEX: ");
+    for (int i = 0; i < SendBufferIndex; i++) {
+      DEBUG_SERIAL.print(SendBuffer[i], HEX);
+    }
+    DEBUG_SERIAL.println();
+#endif
+
     XdataCnt = 0;
     IridiumBufferIndex = 0;
+    memset(IridiumBuffer, 0, sizeof(IridiumBuffer));
     SendStartTime =  millis();
     int err = isbd.sendSBDBinary(SendBuffer, SendBufferIndex);
     if (err != ISBD_SUCCESS)
@@ -645,6 +664,25 @@ void checkForSerial(void)
 
   int numChars;
 
+  if ((numChars = XDATA_SERIAL.available()) > 0) {
+    //DEBUG_SERIAL.print(numChars);
+    char XDATA_Char = XDATA_SERIAL.read();
+    //DEBUG_SERIAL.print("XDATA_Char: ");DEBUG_SERIAL.println(XDATA_Char);
+    IMET_SERIAL.write(XDATA_Char);  //Pass through any xdata chars to the iMet.
+    if (XDATA_Char == '\r')
+    {
+#ifdef DEBUG
+      DEBUG_SERIAL.println();
+      DEBUG_SERIAL.print("XDATA String: ");
+      DEBUG_SERIAL.println(XDataInput);
+#endif
+      newXData = true;
+    } else
+    {
+      XDataInput += XDATA_Char;
+    }
+  }
+
   if (GPS_SERIAL.available()) {
     gps.encode(GPS_SERIAL.read()); //this sends incoming NEMA data to a parser, need to do this regularly
   }
@@ -664,24 +702,6 @@ void checkForSerial(void)
     }
   }
 
-  if ((numChars = XDATA_SERIAL.available()) > 0) {
-    //DEBUG_SERIAL.print(numChars);
-    char XDATA_Char = XDATA_SERIAL.read();
-    //DEBUG_SERIAL.print("XDATA_Char: ");DEBUG_SERIAL.println(XDATA_Char);
-    IMET_SERIAL.write(XDATA_Char);  //Pass through any xdata chars to the iMet.
-    if (XDATA_Char == '\r')
-    {
-#ifdef DEBUG
-      DEBUG_SERIAL.println();
-      DEBUG_SERIAL.print("XDATA String: ");
-      DEBUG_SERIAL.println(XDataInput);
-#endif
-      newXData = true;
-    } else
-    {
-      XDataInput += XDATA_Char;
-    }
-  }
 }
 
 /*
@@ -721,14 +741,23 @@ void parseIMET()
    values into global variables that can then be packaged up to send via Iridium.
 */
 
-void parseXDATA()
+bool parseXDATA()
 {
+  bool ok;
   char XDATAArray[128];
   int c = -99;
   int Pump1_PWM_TEMP = 0;
   int Pump2_PWM_TEMP = 0;
   int TempIce_TEMP = 0;
   int TempPCB_TEMP = 0;
+
+
+  CNC_300 = 0;    //OPC 300nm channel counts aka CN counts
+  CNC_500 = 0;    //OPC 500nm channel counts
+  CNC_700 = 0;    //OPC 700nm channel counts
+  Pump1_PWM = 0;  //Pump1 PWM drive percent (0-100)
+  Pump2_PWM = 0;  //Pump2 PWM drive percent (0-100)
+  TempCN = 0;   //Temperature of the staurator C 0.01 resolution
 
   if (XDataInput.startsWith("xdata=41")) //we have a CNC string
   {
@@ -746,7 +775,10 @@ void parseXDATA()
     */
     //#endif
     c = sscanf(XDATAArray, "%4hx %4hx %4hx %2x %2x %4hx %2x %2x", &CNC_300, &CNC_500, &CNC_700, &Pump1_PWM_TEMP, &Pump2_PWM_TEMP, &TempCN, &TempIce_TEMP, &TempPCB_TEMP);
-
+    ok = true;
+  }
+  else {
+    ok = false;
   }
 
   // Required as using hh in formated string did not return the expected value.
@@ -756,7 +788,7 @@ void parseXDATA()
   TempPCB = (int8_t) TempPCB_TEMP;
 
 #ifdef DEBUG
-  //DEBUG_SERIAL.println(c);
+  DEBUG_SERIAL.print("XDATA Valid = "); DEBUG_SERIAL.println(ok);
   DEBUG_SERIAL.print("CNC Variables: ");
   DEBUG_SERIAL.print(CNC_300); DEBUG_SERIAL.print(' ');
   DEBUG_SERIAL.print(CNC_500); DEBUG_SERIAL.print(' ');
@@ -768,15 +800,10 @@ void parseXDATA()
   DEBUG_SERIAL.print(float(TempPCB) - 100.0); DEBUG_SERIAL.println(); // Convert this back to a float
 #endif
 
-  CNC_300 = 0;    //OPC 300nm channel counts aka CN counts
-  CNC_500 = 0;    //OPC 500nm channel counts
-  CNC_700 = 0;    //OPC 700nm channel counts
-  Pump1_PWM = 0;  //Pump1 PWM drive percent (0-100)
-  Pump2_PWM = 0;  //Pump2 PWM drive percent (0-100)
-  TempCN = 0;   //Temperature of the staurator C 0.01 resolution
-
   memset(XDATAArray, 0, sizeof(XDATAArray));
   newXData = false;
+
+  return ok;
 }
 
 /*
@@ -841,6 +868,11 @@ int addXDataToIridium(int start_index)
 #ifdef DEBUG
   DEBUG_SERIAL.print("Iridium Payload: ");
   DEBUG_SERIAL.write(IridiumBuffer, start_index + 27);
+  DEBUG_SERIAL.println();
+  for (int i = 0; i < 340; i++) {
+    DEBUG_SERIAL.print(IridiumBuffer[i], HEX);
+  }
+  DEBUG_SERIAL.println();
 #endif
 
   return start_index + 27;
