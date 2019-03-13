@@ -447,7 +447,8 @@ void loop()
 
   Serial.println();
 
-  for (tnow = millis(); millis() - tnow < 1UL * 60UL * 1000UL;) {
+  //for (tnow = millis(); millis() - tnow < 1UL * 60UL * 1000UL;) {
+  for (tnow = millis(); millis() - tnow < 25UL * 60UL * 1000UL;) {
     while(ssGPS.available()){Serial.write(ssGPS.read());}
   }
 

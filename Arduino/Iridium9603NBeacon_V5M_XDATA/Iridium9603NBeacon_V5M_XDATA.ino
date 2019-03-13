@@ -886,31 +886,40 @@ int addXDataToIridium(int start_index)
 
 bool ISBDCallback()
 {
-  /*
-    if (!inSetup) {
-    if ((millis() >  SendStartTime + SEND_TIMEOUT)  or (XdataCnt >= PACKETS_TO_SEND))   //probably should not do it this way.
+
+  bool ok = true;
+
+  if (!inSetup) {
+    if (millis() >  SendStartTime + SEND_TIMEOUT)   //probably should not do it this way.
       return false;
+  }
 
-    checkForSerial();
 
-    if (newXData)
-    {
+  checkForSerial();
 
-    #ifdef PRLTEST
-      DEBUG_SERIAL.println();
-      DEBUG_SERIAL.println(" ************************************************");
-      DEBUG_SERIAL.print("INCALLBACK newXData : XDataInput = "); DEBUG_SERIAL.print(XDataInput); DEBUG_SERIAL.print(" XDataCnt = "); DEBUG_SERIAL.println(XdataCnt);
-      DEBUG_SERIAL.println(" ************************************************");
-      DEBUG_SERIAL.println();
-    #endif
+  if (newXData and (XdataCnt < PACKETS_TO_SEND))  //Wll only add new data until # of packets to send is reached.  Then it will wait for the timeout (some data will be lost)
+  {
 
-      parseXDATA();         //Parse the incoming string
+#ifdef PRLTEST
+    DEBUG_SERIAL.println();
+    DEBUG_SERIAL.println(" ************************************************");
+    DEBUG_SERIAL.print("IN ISBD CALL BACK newXData : XDataInput = "); DEBUG_SERIAL.print(XDataInput); DEBUG_SERIAL.print(" XDataCnt = "); DEBUG_SERIAL.println(XdataCnt);
+    DEBUG_SERIAL.println(" ************************************************");
+    DEBUG_SERIAL.println();
+    DEBUG_SERIAL.print("IridiumBufferIndex: ");  DEBUG_SERIAL.println(IridiumBufferIndex);
+#endif
+
+    ok = parseXDATA();         //Parse the incoming string.  Also does a simple check to see if header of string is valid.
+
+    if (ok) {
       IridiumBufferIndex = addXDataToIridium(IridiumBufferIndex);  //Add the values to the string to send via Iridium
       XdataCnt++;            //Increment the counter
-      XDataInput = "";
     }
-    }
-  */
+
+    XDataInput = "";
+  } else if (newXData) {
+    XDataInput = "";
+  }
 
   // 'Flash' the LED
   if ((millis() / 1000) % 2 == 1) {
@@ -924,18 +933,19 @@ bool ISBDCallback()
   return true;
 }
 
+
 /*
    in Debug mode print the SBD Modem Traffic.
 */
 
 
 #ifdef DEBUG
-void ISBDConsoleCallback(IridiumSBD *device, char c)
+void ISBDConsoleCallback(IridiumSBD * device, char c)
 {
   DEBUG_SERIAL.write(c);
 }
 
-void ISBDDiagsCallback(IridiumSBD *device, char c)
+void ISBDDiagsCallback(IridiumSBD * device, char c)
 {
   DEBUG_SERIAL.write(c);
 }
